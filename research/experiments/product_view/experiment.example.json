@@ -1,0 +1,20 @@
+{
+  "product_id": "product01",
+  "product_description": "REPLACE: describe the actual product in English",
+  "must_preserve": ["REPLACE: feature 1", "REPLACE: feature 2", "REPLACE: feature 3"],
+  "inputs": ["data/input/front.jpg", "data/input/right.jpg", "data/input/back.jpg"],
+  "input_descriptions": ["front view", "right side view", "back view"],
+  "targets": [
+    {"id": "front_right", "camera": "front-right quarter view eye-level shot medium shot", "holdout": "data/holdout/front_right.jpg"},
+    {"id": "back_right", "camera": "back-right quarter view eye-level shot medium shot", "holdout": "data/holdout/back_right.jpg"}
+  ],
+  "scene": "A clean commercial product photograph on a matte beige pedestal, warm pale background, soft studio light and a natural contact shadow. One product, fully visible, centered. No props, people or additional advertising text.",
+  "seeds": [101, 202, 303],
+  "width": 1024,
+  "height": 1024,
+  "steps": 40,
+  "true_cfg_scale": 4.0,
+  "lora_scale": 0.9,
+  "precision": "nf4",
+  "include_lora_off_control": true
+}

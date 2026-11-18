@@ -1,0 +1,1112 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>실물 기준 제작</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --paper: #e6eae5;
+  --sheet: #f6f7f3;
+  --ink: #17201b;
+  --muted: #59645d;
+  --rule: #c5ccc5;
+  --sage: #8c988f;
+  --pencil: #d8701c;
+  --match: #23704a;
+  --hidden: #566a85;
+  --diff: #c4301d;
+  --unver: #9b6a0c;
+  --radius-s: 4px;
+  --radius-m: 10px;
+}
+* { box-sizing: border-box; }
+html { background: var(--paper); }
+body {
+  margin: 0; color: var(--ink);
+  font-family: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+}
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--pencil); outline-offset: 2px; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 24px 96px; }
+
+header.top {
+  display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end;
+  padding: 44px 0 28px; border-bottom: 2px solid var(--ink);
+}
+header.top h1 { margin: 0; font-size: 44px; line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; }
+header.top p { margin: 10px 0 0; max-width: 62ch; color: var(--muted); }
+.vlm-pill { font-size: 14px; padding: 6px 12px; border-radius: 999px; border: 1.5px solid currentColor; white-space: nowrap; }
+.vlm-pill.on { color: var(--match); }
+.vlm-pill.off { color: var(--unver); }
+
+section.step { display: grid; grid-template-columns: 56px 1fr; gap: 0 20px; padding: 36px 0 8px; }
+.step-no {
+  font-size: 30px; font-weight: 700; line-height: 1; color: var(--sheet);
+  background: var(--ink); width: 48px; height: 48px; border-radius: 50%;
+  display: grid; place-items: center;
+}
+section.step.idle .step-no { background: var(--sage); }
+.step h2 { margin: 6px 0 4px; font-size: 24px; font-weight: 600; letter-spacing: -0.01em; }
+.step .lead { margin: 0 0 18px; color: var(--muted); max-width: 70ch; }
+.step .why { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; margin: 2px 0 10px; max-width: 86ch; font-size: 14.5px; line-height: 1.55; }
+.step .why b { font-weight: 600; white-space: nowrap; }
+.step .why .prob { font-size: 12.5px; font-weight: 600; padding: 1px 9px; border: 1px solid var(--ink); border-radius: 999px; white-space: nowrap; }
+.step .why .cs { color: var(--muted); font-size: 13px; white-space: nowrap; }
+.panel { background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--radius-m); padding: 20px; }
+
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.btn {
+  border: 1.5px solid var(--ink); background: transparent; padding: 9px 16px;
+  border-radius: var(--radius-s); cursor: pointer; font-weight: 500;
+}
+.btn:hover { background: #dfe4de; }
+.btn.primary { background: var(--ink); color: var(--sheet); }
+.btn.primary:hover { background: #2c3831; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn.small { padding: 5px 12px; font-size: 14px; }
+a.btn { display: inline-block; text-decoration: none; color: inherit; }
+
+.drop {
+  border: 2px dashed var(--sage); border-radius: var(--radius-m); padding: 22px;
+  text-align: center; color: var(--muted); cursor: pointer; margin-top: 14px;
+}
+.drop.over { border-color: var(--ink); background: #edf0ec; color: var(--ink); }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+.fields label { display: block; font-size: 14px; color: var(--muted); margin-bottom: 4px; }
+.fields input {
+  width: 100%; padding: 9px 12px; border: 1.5px solid var(--rule); border-radius: var(--radius-s); background: #fff;
+}
+
+.thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 12px; margin-top: 16px; }
+.thumb { margin: 0; }
+.thumb .img { aspect-ratio: 3/4; background: #dde2dc; border-radius: var(--radius-s); overflow: hidden; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.thumb figcaption > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.role {
+  border: 1px solid var(--rule); background: #fff; border-radius: 999px; padding: 0 9px;
+  font-size: 12px; cursor: pointer; white-space: nowrap;
+}
+.role[data-role=info] { border-color: var(--hidden); color: var(--hidden); }
+.role[data-role=reference] { border-color: var(--unver); color: var(--unver); }
+
+/* reference set: contact sheet */
+.sheet { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 16px; }
+.crop .img { aspect-ratio: 1; background: #fff; border: 1px solid var(--rule); border-radius: var(--radius-s); display: grid; place-items: center; overflow: hidden; position: relative; }
+.crop .img img { max-width: 100%; max-height: 100%; }
+.crop.rep .img { border: 3px solid var(--match); }
+.crop.out .img { border: 3px solid var(--diff); }
+.crop.out .img img { opacity: .5; }
+.crop h4 { margin: 8px 0 0; font-size: 15px; font-weight: 600; }
+.crop p { margin: 2px 0 0; font-size: 13px; color: var(--muted); line-height: 1.45; }
+.tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; color: #fff; }
+.tag.rep { background: var(--match); }
+.tag.out { background: var(--diff); }
+.prints { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+.prints img { height: 120px; border: 3px solid var(--pencil); border-radius: var(--radius-s); background: #fff; }
+.sub { margin: 26px 0 8px; font-size: 17px; font-weight: 600; }
+.composite { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.composite img { width: 100%; border: 1px solid var(--rule); border-radius: var(--radius-s); background: #fff; }
+.composite p { margin: 0 0 10px; max-width: 60ch; line-height: 1.6; }
+@media (max-width: 640px) { .composite { grid-template-columns: 1fr; } }
+.missing { border-left: 4px solid var(--pencil); padding: 4px 0 4px 14px; margin: 0; list-style: none; }
+.missing li { margin: 6px 0; }
+.missing b { font-weight: 600; }
+.note { color: var(--muted); font-size: 14px; }
+
+/* report */
+.tally { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.tally button {
+  background: none; border: 0; border-right: 1px solid var(--rule); text-align: left; padding: 14px 16px; cursor: pointer;
+}
+.tally button:last-child { border-right: 0; }
+.tally button[aria-pressed=true] { background: var(--sheet); }
+.tally .n { display: block; font-size: 40px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.tally .l { font-size: 14px; color: var(--muted); }
+.v-match { color: var(--match); } .v-not_visible { color: var(--hidden); } .v-different { color: var(--diff); } .v-unverified { color: var(--unver); }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+.card { background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--radius-m); overflow: hidden; display: flex; flex-direction: column; }
+.card.wide { grid-column: 1 / -1; }
+.card .media { background: #dde2dc; aspect-ratio: 4/3; display: grid; place-items: center; overflow: hidden; border-bottom: 4px solid var(--vc, var(--rule)); }
+.card .media img, .card .media video { max-width: 100%; max-height: 100%; display: block; }
+.card .body { padding: 14px 16px 16px; display: grid; gap: 10px; }
+.verdict { font-weight: 700; font-size: 17px; color: var(--vc); }
+.fname { font-size: 12px; color: var(--muted); word-break: break-all; }
+.why { font-size: 14px; margin: 0; }
+.why ul { margin: 4px 0 0; padding-left: 18px; }
+
+/* the score ruler: inliers on a 0-80 scale with the pass line at 20 */
+.ruler { position: relative; height: 30px; }
+.ruler .track { position: absolute; left: 0; right: 0; top: 9px; height: 8px; background: #dde2dc; border-radius: 4px; }
+.ruler .fill { position: absolute; left: 0; top: 9px; height: 8px; border-radius: 4px; background: var(--vc); }
+.ruler .pass { position: absolute; top: 0; width: 0; height: 26px; border-left: 2.5px solid var(--pencil); }
+.ruler .pass span { position: absolute; left: 4px; top: 13px; font-size: 11px; color: var(--pencil); white-space: nowrap; }
+.ruler .val { position: absolute; right: 0; top: -2px; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.linkish { background: none; border: 0; padding: 0; color: var(--ink); text-decoration: underline; cursor: pointer; font-size: 14px; justify-self: start; }
+
+.chart { width: 100%; height: auto; display: block; }
+.frames { display: flex; gap: 12px; flex-wrap: wrap; }
+.frames figure { margin: 0; width: 180px; }
+.frames img { width: 100%; border-radius: var(--radius-s); border-bottom: 4px solid var(--vc); display: block; }
+.frames figcaption { font-size: 13px; margin-top: 4px; }
+
+dialog { border: 0; padding: 0; border-radius: var(--radius-m); max-width: min(1200px, 94vw); background: var(--sheet); }
+dialog::backdrop { background: rgba(23, 32, 27, .7); }
+dialog img { display: block; max-width: 100%; max-height: 82vh; }
+dialog .bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; font-size: 14px; }
+
+.busy { display: inline-flex; gap: 10px; align-items: center; color: var(--muted); font-size: 14px; }
+.busy::before { content: ""; width: 14px; height: 14px; border: 2px solid var(--sage); border-top-color: var(--ink); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .busy::before { animation: none; } }
+.err { color: var(--diff); font-size: 14px; }
+.mainbtn { border: 1px solid var(--rule); background: #fff; border-radius: 999px; padding: 0 9px; font-size: 12px; cursor: pointer; }
+.mainbtn[aria-pressed=true] { background: var(--match); border-color: var(--match); color: #fff; }
+.thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
+textarea {
+  width: 100%; padding: 9px 12px; border: 1.5px solid var(--rule); border-radius: var(--radius-s); background: #fff;
+  font: inherit; color: inherit; line-height: 1.55; resize: vertical;
+}
+.form { display: grid; gap: 16px; }
+.form label.h { display: block; font-weight: 600; margin-bottom: 4px; }
+.form .hint { font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1.5px solid var(--rule); background: #fff; border-radius: 999px; padding: 4px 14px; cursor: pointer; font-size: 14px; }
+.chip[aria-pressed=true] { border-color: var(--ink); background: var(--ink); color: var(--sheet); }
+.conflict { border-left: 4px solid var(--pencil); padding: 6px 0 6px 14px; margin: 0 0 12px; }
+.conflict p { margin: 0 0 6px; }
+.conflict label { display: flex; gap: 8px; align-items: baseline; font-size: 15px; margin: 2px 0; cursor: pointer; }
+.kitgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.kitgrid figure { margin: 0; }
+.kitgrid img { width: 100%; aspect-ratio: 1; object-fit: contain; background: #fff; border: 1px solid var(--rule); border-radius: var(--radius-s); }
+.kitgrid figcaption { font-size: 13px; color: var(--muted); margin-top: 4px; }
+pre.box { white-space: pre-wrap; background: #fff; border: 1px solid var(--rule); border-radius: var(--radius-s); padding: 12px 14px; margin: 0; font: inherit; font-size: 15px; }
+.keeplist { margin: 8px 0 0; padding-left: 18px; }
+/* 8, 9: fix request and fix check */
+.fixgrid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.paint { position: relative; background: #dde2dc; border-radius: var(--radius-s); overflow: hidden; touch-action: none; user-select: none; cursor: crosshair; min-height: 160px; display: grid; place-items: center; }
+.paint img { display: block; width: 100%; height: auto; pointer-events: none; }
+.paint .empty { color: var(--muted); font-size: 14px; padding: 40px 16px; text-align: center; }
+.paint .sel { position: absolute; border: 2.5px solid var(--pencil); background: rgba(216, 112, 28, .16); pointer-events: none; }
+.paint .prod { position: absolute; border: 2px dashed var(--match); pointer-events: none; }
+.paint .pt { position: absolute; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; border: 3px solid #fff; background: var(--hidden); box-shadow: 0 0 0 2px var(--hidden); pointer-events: none; }
+.paint-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; font-size: 14px; }
+.fixcard { margin-top: 22px; background: #fff; border: 2px solid var(--ink); border-radius: var(--radius-m); overflow: hidden; }
+.fixcard .fc-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 18px; background: var(--ink); color: var(--sheet); }
+.fixcard .fc-h b { font-size: 17px; }
+.poss { font-size: 14px; font-weight: 700; padding: 3px 12px; border-radius: 999px; background: var(--sheet); }
+.poss.yes { color: var(--match); } .poss.ask { color: var(--unver); } .poss.no { color: var(--diff); }
+.fc { display: grid; grid-template-columns: 112px minmax(0, 1fr); margin: 0; }
+.fc dt, .fc dd { padding: 11px 18px; border-bottom: 1px solid var(--rule); margin: 0; }
+.fc dt { color: var(--muted); font-size: 14px; background: var(--sheet); }
+.fc dd ul { margin: 0; padding-left: 18px; }
+.fc .attach { display: flex; flex-wrap: wrap; gap: 10px; }
+.fc .attach figure { margin: 0; width: 120px; font-size: 12px; color: var(--muted); }
+.fc .attach img { width: 120px; height: 90px; object-fit: contain; background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--radius-s); display: block; }
+.fc .cost { font-size: 20px; font-weight: 700; }
+.fc pre.box { font-size: 14.5px; }
+.fc-warn { margin: 0; padding: 12px 18px 12px 36px; background: #fbf1e6; border-bottom: 1px solid var(--rule); }
+.fc-warn li { margin: 3px 0; }
+.fc-alt { padding: 12px 18px; border-bottom: 1px solid var(--rule); font-size: 14.5px; }
+.fc-alt ul { margin: 4px 0 0; padding-left: 18px; }
+.fc-act { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 14px 18px; }
+.fixres { margin-top: 20px; display: grid; gap: 18px; }
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.trio figure { margin: 0; }
+.trio img { width: 100%; display: block; border-radius: var(--radius-s); border-bottom: 4px solid var(--vc, var(--rule)); background: #dde2dc; }
+.trio figcaption { font-size: 14px; margin-top: 6px; font-weight: 600; color: var(--vc, var(--ink)); }
+.cmp { width: 100%; border-collapse: collapse; font-size: 15px; background: var(--sheet); border-radius: var(--radius-m); overflow: hidden; }
+.cmp th, .cmp td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.cmp th { font-size: 13.5px; color: var(--muted); font-weight: 600; }
+.cmp td.n { font-variant-numeric: tabular-nums; }
+.headline { font-size: 20px; font-weight: 700; margin: 0; }
+@media (max-width: 860px) { .fixgrid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .trio { grid-template-columns: 1fr; } .fc { grid-template-columns: 1fr; } .fc dt { border-bottom: 0; padding-bottom: 2px; } }
+[hidden] { display: none !important; }
+
+@media (max-width: 720px) {
+  header.top { grid-template-columns: 1fr; }
+  header.top h1 { font-size: 34px; }
+  section.step { grid-template-columns: 1fr; }
+  .step-no { margin-bottom: 8px; }
+  .fields { grid-template-columns: 1fr; }
+  .tally { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>실물 기준 제작과 검수</h1>
+      <p>생성 모델은 손에 든 실물 사진에 없는 걸 지어냅니다. 제품의 정체성(기준 자료)과 연출(레퍼런스)을 나눠 받고, 제작 명세를 확인한 뒤 생성하고, 결과물을 기준 자료와 대조합니다.</p>
+    </div>
+    <span id="vlm" class="vlm-pill off">VLM 상태 확인 중</span>
+  </header>
+
+  <section class="step" id="s1">
+    <div class="step-no">1</div>
+    <div>
+      <h2>판매상품 사진</h2>
+      <p class="why"><b>막는 문제</b><span class="prob">A1 제품 정보 부족</span><span class="prob">B1 실제 입력 연결</span><span>필요한 면 사진이 없거나, 제품 사진이 정보용으로 분류돼 생성에 쓰이지 않습니다.</span><span class="cs">CS 3, 12, 23, 39, 9, 29</span></p>
+      <p class="lead">셀러가 가진 사진을 그대로 넣고, 파는 상품이 가장 잘 보이는 사진 한 장을 메인으로 고릅니다. 정보용 상세컷 속 제품도 잘라서 씁니다. 제품을 천천히 한 바퀴 돌려 찍은 영상(가이드 촬영)을 넣으면 사진에 없는 면을 영상에서 채웁니다.</p>
+      <div class="panel">
+        <div class="row" id="exampleBtns"></div>
+        <label class="row note" style="gap:6px;margin-top:10px" id="capRow" hidden><input type="checkbox" id="withCap"> 예시 촬영 영상(한 바퀴)도 넣기</label>
+        <div class="drop" id="drop1" tabindex="0" role="button">사진이나 촬영 영상을 끌어다 놓거나 눌러서 고르세요 (jpg, png, webp, mp4)</div>
+        <input type="file" id="file1" accept="image/*,video/*" multiple hidden>
+        <div class="thumbs" id="thumbs1"></div>
+        <div class="fields">
+          <div><label for="pname">상품명</label><input id="pname" placeholder="예: 고양이 라인드로잉 머그컵"></div>
+          <div><label for="pquery">영어 탐지어</label><input id="pquery" placeholder="예: a mug"></div>
+        </div>
+        <div class="row" style="margin-top:16px">
+          <button class="btn primary" id="go1" disabled>제품 기준 자료 만들기</button>
+          <span class="busy" id="busy1" hidden>제품을 찾아 잘라내는 중</span>
+          <span class="err" id="err1"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step idle" id="s2">
+    <div class="step-no">2</div>
+    <div>
+      <h2>제품 기준 자료</h2>
+      <p class="why"><b>막는 문제</b><span class="prob">A1 제품 정보 부족</span><span>어떤 면이 빠졌는지 모른 채 만들면 모델이 그 면을 지어냅니다. 생성과 검수가 같은 기준을 보게 합니다.</span><span class="cs">CS 6, 7, 8, 25, 35</span></p>
+      <p class="lead">형태, 색, 부품, 프린트처럼 바뀌면 안 되는 정보입니다. 초록 테두리가 프린트가 가장 많은 대표 면이고, 주황 테두리가 결과물과 대조할 프린트 영역입니다.</p>
+      <div class="panel" id="refPanel"><p class="note">1단계에서 만들면 여기에 나옵니다.</p></div>
+    </div>
+  </section>
+
+  <section class="step idle" id="s3">
+    <div class="step-no">3</div>
+    <div>
+      <h2>연출과 레퍼런스</h2>
+      <p class="why"><b>막는 문제</b><span class="prob">A2 자료의 역할 불명확</span><span>참고 사진 속 다른 제품이 판매상품 대신 결과에 섞입니다.</span><span class="cs">CS 1, 11, 15, 27</span></p>
+      <p class="lead">원하는 장면을 적고, 구도나 배경, 조명을 참고할 사진을 넣습니다. 레퍼런스는 연출에만 쓰고 제품 기준 자료에는 섞지 않습니다.</p>
+      <div class="panel">
+        <div class="row" id="sceneEx"></div>
+        <div class="form" style="margin-top:12px">
+          <div><label class="h" for="scene">원하는 장면</label><textarea id="scene" rows="2" placeholder="예: 아침 햇살이 드는 카페 테이블, 정면 컷 위주"></textarea></div>
+        </div>
+        <div class="drop" id="drop3" tabindex="0" role="button">레퍼런스 사진을 끌어다 놓거나 눌러서 고르세요 (선택)</div>
+        <input type="file" id="file3" accept="image/*" multiple hidden>
+        <div class="thumbs" id="thumbs3"></div>
+        <div class="row" style="margin-top:16px">
+          <button class="btn primary" id="go3" disabled>제작 명세 제안 받기</button>
+          <span class="busy" id="busy3" hidden>유지할 것, 참고할 것, 충돌을 검토하는 중</span>
+          <span class="err" id="err3"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step idle" id="s4">
+    <div class="step-no">4</div>
+    <div>
+      <h2>제작 명세 확인</h2>
+      <p class="why"><b>막는 문제</b><span class="prob">A3 제작 의도 불명확</span><span>유지할 것과 충돌을 모른 채 100크레딧을 쓰고, 주지 않은 구성을 만듭니다.</span><span class="cs">CS 31, 33</span></p>
+      <p class="lead">서비스가 제안한 명세입니다. 고칠 곳을 고치고 충돌마다 처리 방법을 고른 뒤 확정합니다. 크레딧은 이 단계까지 쓰지 않습니다.</p>
+      <div class="panel" id="specPanel"><p class="note">3단계에서 제안받으면 여기에 나옵니다.</p></div>
+    </div>
+  </section>
+
+  <section class="step idle" id="s5">
+    <div class="step-no">5</div>
+    <div>
+      <h2>제작 설정</h2>
+      <p class="why"><b>막는 문제</b><span class="prob">B1 실제 입력 연결</span><span>크리에이지가 컷마다 사진을 나눠 붙여, 무지 면만 받은 컷이 프린트를 지어냅니다. 면 합본만 올리면 실물 프린트 6/15 → 14/17.</span><span class="cs">CS 26</span></p>
+      <p class="lead">확정한 명세를 크리에이지 입력 칸에 맞춰 묶었습니다. 상품 이미지에는 대표 면과 면 합본 두 장만 올립니다.</p>
+      <div class="panel" id="kitPanel"><p class="note">4단계에서 확정하면 여기에 나옵니다.</p></div>
+    </div>
+  </section>
+
+  <section class="step idle" id="s6">
+    <div class="step-no">6</div>
+    <div>
+      <h2>결과물 검수</h2>
+      <p class="why"><b>막는 문제</b><span class="prob">B2 최초 생성 변형</span><span class="prob">B3 영상화</span><span>실물을 받고도 작은 글자, 구조, 비율이 바뀐 컷을 지금은 셀러가 돈을 낸 뒤 직접 찾습니다.</span><span class="cs">CS 10, 13, 16, 17, 19, 24, 25, 영상 4, 5, 14, 18</span></p>
+      <p class="lead">생성된 이미지와 영상을 넣습니다. 영상은 0.5초마다 한 프레임씩 대조합니다. 확정한 명세가 있으면 그 유지 조건도 함께 확인합니다.</p>
+      <div class="panel">
+        <div class="row" id="outBtns"><span class="note">제품 기준 자료를 먼저 만드세요.</span></div>
+        <div class="drop" id="drop2" tabindex="0" role="button">결과물을 끌어다 놓거나 눌러서 고르세요 (이미지, mp4)</div>
+        <input type="file" id="file2" accept="image/*,video/*" multiple hidden>
+        <div class="thumbs" id="thumbs2"></div>
+        <div class="row" style="margin-top:16px">
+          <label class="row note" style="gap:6px"><input type="checkbox" id="vlmAll"> 통과한 컷도 VLM으로 작은 글자까지 확인</label>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <button class="btn primary" id="go2" disabled>검수하기</button>
+          <span class="busy" id="busy2" hidden>대조하는 중</span>
+          <span class="err" id="err2"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step idle" id="s7">
+    <div class="step-no">7</div>
+    <div>
+      <h2>검수 리포트</h2>
+      <p class="why"><b>막는 문제</b><span class="prob">B2 최초 생성 변형</span><span>점수가 낮다고 다 틀린 건 아닙니다. 안 보이는 각도와 실제로 다른 컷을 갈라야 다시 만들기, 실물 교체로 바로 넘어갑니다.</span><span class="cs">우리 시험: 낮은 점수 30건 중 실제 문제 7건</span></p>
+      <p class="lead">1차는 프린트 키포인트 대조(SIFT), 기준선 20점입니다. 20점 아래는 VLM이 실물 사진과 같이 보고 "안 보이는 각도"인지 "실물과 다름"인지 가립니다.</p>
+      <div id="report"><p class="note">6단계에서 검수하면 여기에 나옵니다.</p></div>
+    </div>
+  </section>
+
+  <section class="step idle" id="s8">
+    <div class="step-no">8</div>
+    <div>
+      <h2>수정 요청과 확인 카드</h2>
+      <p class="why"><b>막는 문제</b><span class="prob">B3 수정·후처리</span><span>요청을 잘못 알아듣거나, 할 수 없는 수정이라는 걸 크레딧을 낸 뒤에 알게 됩니다.</span><span class="cs">CS 2, 36, 21, 32</span></p>
+      <p class="lead">고칠 곳을 칠하고 요청을 적으면, 크레딧을 쓰기 전에 확인 카드를 보여 줍니다. 처리 방식, 유지할 것, 붙일 실물 사진, 비용, 가능 여부를 보고 "이대로 진행"할 때만 차감합니다.</p>
+      <div class="panel">
+        <div class="row" id="fixEx"><span class="note">1단계에서 제품 기준 자료를 먼저 만드세요. 7단계 리포트의 "이 컷 고치기"로도 시작할 수 있습니다.</span></div>
+        <div class="fixgrid" style="margin-top:14px">
+          <div>
+            <div class="paint" id="paint"><div class="empty" id="paintEmpty">고칠 이미지를 고르면 여기에 나옵니다.</div><img id="paintImg" alt="고칠 이미지" hidden><div class="prod" id="paintProd" hidden></div><div class="sel" id="paintSel" hidden></div><div class="pt" id="paintPt" hidden></div></div>
+            <div class="paint-tools">
+              <div class="chips" id="paintMode"><button class="chip" data-m="box" aria-pressed="true">고칠 곳 칠하기</button><button class="chip" data-m="point" aria-pressed="false">정답 자리 찍기</button></div>
+              <button class="btn small" id="paintClear">지우기</button>
+              <span class="note" id="paintInfo"></span>
+            </div>
+            <div class="drop" id="drop8" tabindex="0" role="button">다른 이미지를 고치려면 끌어다 놓거나 눌러서 고르세요</div>
+            <input type="file" id="file8" accept="image/*" hidden>
+          </div>
+          <div class="form">
+            <div><span class="h" style="display:block;font-weight:600;margin-bottom:4px">고른 요소</span><p class="hint">에디터에서 선택한 것. 같은 말이라도 페이지 글자면 무료, 그림 속 글자면 다시 그리기입니다.</p><div class="chips" id="fixTarget"></div></div>
+            <div><label class="h" for="fixText">요청</label><textarea id="fixText" rows="3" placeholder="예: 왼쪽 책 위에 놓인 펜만 지워 주세요"></textarea></div>
+            <div><span class="h" style="display:block;font-weight:600;margin-bottom:4px">종류</span><p class="hint">고르지 않으면 요청 글에서 추정하고, 카드에 추정이라고 표시합니다.</p><div class="chips" id="fixKind"></div></div>
+            <div><span class="h" style="display:block;font-weight:600;margin-bottom:4px">같은 방법으로 실패한 횟수</span><div class="chips" id="fixTried"></div></div>
+            <div class="row"><button class="btn primary" id="go8" disabled>확인 카드 보기</button><span class="busy" id="busy8" hidden>처리 방식을 고르는 중</span><span class="err" id="err8"></span></div>
+          </div>
+        </div>
+        <div id="fixCard"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step idle" id="s9">
+    <div class="step-no">9</div>
+    <div>
+      <h2>고친 결과 확인</h2>
+      <p class="why"><b>막는 문제</b><span class="prob">B3 수정·후처리</span><span>수정도 다시 그리기라 칠하지 않은 곳의 무늬와 글자가 바뀌고, 고칠수록 쌓입니다.</span><span class="cs">CS 34, 38</span></p>
+      <p class="lead">크리에이지에서 고친 결과를 수정 전 이미지와 비교합니다. 구도가 그대로면 고친 곳만 가져오고 나머지는 원본 픽셀로 덮은 뒤 다시 검수합니다.</p>
+      <div class="panel">
+        <p class="note" id="fixAfterLead" style="margin-top:0">8단계에서 "이대로 진행"을 누르면 시작합니다.</p>
+        <div class="row" id="fixAfterBtns"></div>
+        <div class="drop" id="drop9" tabindex="0" role="button">크리에이지에서 고친 이미지를 끌어다 놓거나 눌러서 고르세요</div>
+        <input type="file" id="file9" accept="image/*" hidden>
+        <div class="thumbs" id="thumbs9"></div>
+        <div style="margin-top:14px"><span class="h" style="display:block;font-weight:600;margin-bottom:6px">어떻게 고쳤나요</span><div class="chips" id="fixHow"><button class="chip" data-h="area" aria-pressed="true">영역 편집 (칠한 곳만 다시)</button><button class="chip" data-h="chat" aria-pressed="false">채팅이나 빠른 편집 (칠한 영역 없음)</button></div></div>
+        <div class="row" style="margin-top:16px"><button class="btn primary" id="go9" disabled>고친 결과 검수</button><span class="busy" id="busy9" hidden>맞추고 비교하는 중</span><span class="err" id="err9"></span></div>
+        <div id="fixResult"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<dialog id="dlg"><div class="bar"><span id="dlgTitle"></span><button class="btn small" id="dlgClose">닫기</button></div><img id="dlgImg" alt=""></dialog>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const V = {
+  match: "실물과 일치",
+  not_visible: "프린트 면 안 보임",
+  different: "실물과 다름",
+  unverified: "확인 필요",
+};
+const VC = { match: "var(--match)", not_visible: "var(--hidden)", different: "var(--diff)", unverified: "var(--unver)" };
+const ROLES = ["product", "info", "reference"];
+const ROLE_KO = { product: "상품", info: "정보용", reference: "참고" };
+const state = { status: { vlm: false }, examples: [], example: "", uploads: [], main: null, outputs: [], sceneRefs: [], exampleRefs: false, sid: null, spec: null, outEx: "", report: null, filter: null };
+const FACE_KO = { front: "정면", back: "뒷면", side: "옆면", handle: "손잡이", top: "윗면", bottom: "바닥", detail: "디테일", other: "기타" };
+const ASPECTS = ["구도", "배경", "조명", "색감", "소품", "포즈"];
+const REF_ACTION = { hide: "제품 가림", drop: "뺄 예정", keep: "그대로" };
+const smooth = () => (matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth");
+function openStep(n) { $("#s" + n).classList.remove("idle"); $("#s" + n).scrollIntoView({ behavior: smooth() }); }
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function roleOf(name) { return name.startsWith("info-") ? "info" : name.startsWith("reference-") ? "reference" : "product"; }
+
+async function init() {
+  state.status = await (await fetch("/api/status")).json();
+  const pill = $("#vlm");
+  pill.className = "vlm-pill " + (state.status.vlm ? "on" : "off");
+  pill.textContent = state.status.vlm ? `VLM 켜짐 (${state.status.model})` : "VLM 꺼짐: 1차 대조만 합니다";
+  $("#vlmAll").disabled = !state.status.vlm;
+  $("#pquery").placeholder = state.status.vlm ? "비우면 상품명에서 VLM이 만듭니다" : "예: a mug (VLM이 꺼져 있어 필요)";
+  state.examples = await (await fetch("/api/examples")).json();
+  const box = $("#exampleBtns");
+  box.innerHTML = '<span class="note">예시로 시작:</span>';
+  for (const ex of state.examples) {
+    const b = document.createElement("button");
+    b.className = "btn small";
+    b.textContent = ex.label;
+    b.onclick = () => loadExample(ex);
+    box.appendChild(b);
+  }
+}
+
+function loadExample(ex) {
+  state.example = ex.id;
+  state.uploads = ex.uploads.map((n) => ({ name: n, role: roleOf(n), url: `/api/example-file/${ex.id}/${encodeURIComponent(n)}`, file: null }));
+  state.main = ex.main;
+  $("#pname").value = ex.name;
+  $("#pquery").value = "";
+  $("#capRow").hidden = !ex.capture;
+  $("#withCap").checked = ex.capture;
+  renderUploads();
+}
+
+function addFiles(list, target) {
+  for (const f of list) {
+    const item = { name: f.name, file: f, url: URL.createObjectURL(f), role: roleOf(f.name), video: f.type.startsWith("video") };
+    if (target === state.uploads && !item.video && !state.main && item.role === "product") state.main = item.name;
+    target.push(item);
+  }
+}
+
+function renderUploads() {
+  const t = $("#thumbs1");
+  t.innerHTML = state.uploads.map((u, i) => `
+    <figure class="thumb"><div class="img">${u.video ? `<video src="${u.url}" muted></video>` : `<img src="${u.url}" alt="${esc(u.name)}">`}</div>
+    <figcaption><span>${esc(u.name.replace(/^(info-|reference-)/, "").slice(0, 14))}</span>
+    ${u.video ? '<span class="role">촬영 영상</span>' : `<span class="row" style="gap:4px">
+      ${u.role !== "reference" ? `<button class="mainbtn" data-main="${i}" aria-pressed="${state.main === u.name}" title="파는 상품이 가장 잘 보이는 사진">메인</button>` : ""}
+      <button class="role" data-i="${i}" data-role="${u.role}" title="눌러서 역할 바꾸기">${ROLE_KO[u.role]}</button></span>`}</figcaption></figure>`).join("");
+  t.querySelectorAll(".role[data-i]").forEach((b) => b.onclick = () => {
+    const u = state.uploads[+b.dataset.i];
+    u.role = ROLES[(ROLES.indexOf(u.role) + 1) % 3];
+    if (!u.file) state.example = "";  // a role change on an example turns it into a manual upload
+    if (u.role === "reference" && state.main === u.name) state.main = null;
+    renderUploads();
+  });
+  t.querySelectorAll(".mainbtn").forEach((b) => b.onclick = () => {
+    const u = state.uploads[+b.dataset.main];
+    state.main = state.main === u.name ? null : u.name;
+    renderUploads();
+  });
+  $("#go1").disabled = state.uploads.length === 0 && !$("#withCap").checked;
+}
+
+function renderOutputs() {
+  $("#thumbs2").innerHTML = state.outputs.map((o) => `
+    <figure class="thumb"><div class="img">${o.video ? `<video src="${o.url}" muted></video>` : `<img src="${o.url}" alt="">`}</div>
+    <figcaption><span>${esc(o.name.slice(0, 18))}</span></figcaption></figure>`).join("");
+  $("#go2").disabled = !state.sid || (state.outputs.length === 0 && !state.outEx);
+}
+
+function wireDrop(dropSel, inputSel, onFiles) {
+  const d = $(dropSel), inp = $(inputSel);
+  d.onclick = () => inp.click();
+  d.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); inp.click(); } };
+  inp.onchange = () => { onFiles(inp.files); inp.value = ""; };
+  d.ondragover = (e) => { e.preventDefault(); d.classList.add("over"); };
+  d.ondragleave = () => d.classList.remove("over");
+  d.ondrop = (e) => { e.preventDefault(); d.classList.remove("over"); onFiles(e.dataTransfer.files); };
+}
+
+async function post(url, fd) {
+  const r = await fetch(url, { method: "POST", body: fd });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.detail || `요청 실패 (${r.status})`);
+  return j;
+}
+
+async function makeRefset() {
+  $("#err1").textContent = "";
+  $("#busy1").hidden = false; $("#go1").disabled = true;
+  const fd = new FormData();
+  fd.append("name", $("#pname").value.trim());
+  fd.append("query", $("#pquery").value.trim());
+  fd.append("main", state.main || "");
+  if (state.example) {
+    fd.append("example", state.example);
+    fd.append("with_capture", $("#withCap").checked ? "true" : "false");
+  } else {
+    for (const u of state.uploads) {
+      const blob = u.file || await (await fetch(u.url)).blob();
+      fd.append("files", blob, u.name.replace(/^(info-|reference-)/, ""));
+      fd.append("roles", u.video ? "product" : u.role);
+    }
+  }
+  try {
+    const j = await post("/api/refset", fd);
+    state.sid = j.sid; state.outEx = ""; state.outputs = []; state.report = null; state.spec = null;
+    renderRefset(j);
+    renderSceneEx();
+    renderOutBtns();
+    renderOutputs();
+    $("#go3").disabled = false;
+    $("#s3").classList.remove("idle"); $("#s6").classList.remove("idle");
+    renderFixEx(); $("#s8").classList.remove("idle");
+    openStep(2);
+  } catch (e) { $("#err1").textContent = e.message; }
+  finally { $("#busy1").hidden = true; $("#go1").disabled = false; }
+}
+
+function renderRefset(j) {
+  const r = j.refset;
+  const crop = (it, out) => {
+    const rep = it.crop === r.representative, main = it.crop === r.main;
+    const tag = out ? '<span class="tag out">다른 제품, 제외</span>'
+      : (main ? '<span class="tag rep" style="background:var(--ink)">메인</span> ' : "") + (rep ? '<span class="tag rep">대표 면</span>' : "");
+    const capture = it.role === "capture";
+    const face = it.face_ko ? it.face_ko : capture ? "촬영 영상" : ROLE_KO[it.role];
+    const src = capture ? `촬영 영상 ${esc(it.file.split("@")[1] || "")}` : `${esc(it.file)} (${ROLE_KO[it.role]})`;
+    return `<figure class="crop ${rep ? "rep" : ""} ${out ? "out" : ""}" style="margin:0">
+      <div class="img"><img src="${j.crops[it.crop]}" alt="${esc(it.file)}"></div>
+      <h4>${esc(face)} ${tag}</h4>
+      <p>${src}${it.full_frame ? ", 클로즈업 전체" : ""}</p>
+      <p>프린트 밀도 ${it.detail}${it.note ? `<br>${esc(it.note)}` : ""}</p></figure>`;
+  };
+  let h = `<div class="sheet">${r.items.map((i) => crop(i, false)).join("")}${r.excluded.map((i) => crop(i, true)).join("")}</div>`;
+  if (r.dropped.length) h += `<p class="note">제품을 찾지 못해 뺀 사진: ${r.dropped.map((d) => esc(d.file)).join(", ")}</p>`;
+  for (const c of r.capture || []) h += `<p class="note">촬영 영상 ${esc(c.file)}: ${c.sampled}프레임 중 흔들리지 않고 제품이 보인 ${c.with_product ?? 0}프레임에서 서로 다른 면 ${(c.kept || []).length}장을 골랐습니다.</p>`;
+  if ((r.references || []).length) h += `<p class="note">참고 역할 사진 ${r.references.length}장은 기준 자료에서 빼고 3단계 연출 레퍼런스로 넘깁니다.</p>`;
+  h += `<h3 class="sub">프린트 영역 ${j.prints.length}곳</h3>`;
+  h += j.prints.length ? `<div class="prints">${j.prints.map((u) => `<img src="${u}" alt="프린트 영역">`).join("")}</div>`
+    : `<p class="note">프린트나 라벨이 없는 제품입니다. 결과물은 VLM이 모양과 재질로 대조합니다.</p>`;
+  h += `<h3 class="sub">면 합본</h3>`;
+  h += j.composite
+    ? `<div class="composite"><img src="${j.composite}" alt="면 합본">
+        <div><p>크리에이지는 업로드한 상품 사진을 컷마다 나눠 붙입니다. 무지 면 사진만 받은 컷은 생성 모델이 정면으로 그리면서 프린트를 지어냅니다. 모든 면을 한 장에 모은 합본을 올리면 어느 컷에 붙든 프린트 면이 같이 들어갑니다(머그 시험: 합본만 올렸을 때 결과물 17개 중 14개가 실물 프린트, Run 9는 15개 중 6개).</p>
+        <p class="note">${r.composite.views.length}개 면${r.main ? ", 메인 사진을 크게" : ""}. ${r.vlm.used ? "VLM이 붙인 면 이름으로 면마다 한 장." : "서로 가장 다른 사진 순서(VLM이 켜지면 면 이름으로 고릅니다)."} 생성 모델이 글자를 따라 그릴 수 있어 이미지에 글자는 넣지 않았습니다. 5단계 제작 설정에 들어갑니다.</p></div></div>`
+    : `<p class="note">제품 사진이 한 장뿐이라 합본을 만들지 않았습니다. 대표 면 사진을 그대로 씁니다.</p>`;
+  h += `<h3 class="sub">빠진 면</h3>`;
+  if (r.vlm.used && r.missing_faces.length) {
+    h += `<ul class="missing">${r.missing_faces.map((m) => `<li><b>${esc(m.face_ko)}</b>: ${esc(m.why)}. ${esc(m.shot)}</li>`).join("")}</ul>`;
+  } else if (r.vlm.used) {
+    h += `<p class="note">빠진 면이 없습니다.</p>`;
+  } else {
+    h += `<p class="note">VLM이 켜지면 면 이름을 붙이고, 이 제품에 필요한데 사진에 없는 면을 촬영 안내와 함께 알려 줍니다.</p>`;
+  }
+  $("#refPanel").innerHTML = h;
+}
+
+function renderSceneEx() {
+  const ex = state.examples.find((e) => e.id === state.example);
+  const box = $("#sceneEx");
+  state.exampleRefs = false;
+  if (!ex) { box.innerHTML = ""; return; }
+  box.innerHTML = '<span class="note">예시 장면:</span>';
+  const b = document.createElement("button");
+  b.className = "btn small"; b.textContent = ex.scene.request.slice(0, 28) + (ex.scene.request.length > 28 ? "…" : "");
+  b.onclick = () => {
+    $("#scene").value = ex.scene.request;
+    state.exampleRefs = ex.scene.references.length > 0;
+    state.sceneRefs = ex.scene.references.map((n) => ({ name: n, url: `/api/example-file/${ex.id}/${encodeURIComponent(n)}`, file: null, example: true }));
+    renderSceneRefs();
+  };
+  box.appendChild(b);
+}
+
+function renderSceneRefs() {
+  $("#thumbs3").innerHTML = state.sceneRefs.map((o) => `
+    <figure class="thumb"><div class="img"><img src="${o.url}" alt=""></div>
+    <figcaption><span>${esc(o.name.slice(0, 18))}</span></figcaption></figure>`).join("");
+}
+
+async function proposeSpec() {
+  $("#err3").textContent = "";
+  $("#busy3").hidden = false; $("#go3").disabled = true;
+  const fd = new FormData();
+  fd.append("sid", state.sid);
+  fd.append("request", $("#scene").value.trim());
+  fd.append("example_refs", state.exampleRefs ? "true" : "false");
+  for (const o of state.sceneRefs) if (o.file) fd.append("files", o.file, o.name);
+  try {
+    const j = await post("/api/spec", fd);
+    state.spec = j;
+    renderSpec(j);
+    openStep(4);
+  } catch (e) { $("#err3").textContent = e.message; }
+  finally { $("#busy3").hidden = true; $("#go3").disabled = false; }
+}
+
+const lines = (a) => (a || []).join("\n");
+const unlines = (t) => t.split("\n").map((x) => x.trim()).filter(Boolean);
+
+function renderSpec(j) {
+  const d = j.doc, s = d.spec;
+  // a hidden reference shows what Creazy will get: the kit image with the product grayed out
+  const refs = d.references.length ? `<div class="thumbs">${d.references.map((r) => {
+    const t = r.treatment || {};
+    const src = t.action === "hide" ? `/files/${state.sid}/spec/kit/${t.kit}` : `/files/${state.sid}/refset/${r.path}`;
+    return `<figure class="thumb"><div class="img"><img src="${src}" alt=""></div>
+    <figcaption><span>${esc(r.file.slice(0, 16))}</span>${r.has_product ? `<span class="role" style="color:var(--pencil);border-color:var(--pencil)">${REF_ACTION[t.action] || "제품 있음"}</span>` : ""}</figcaption>
+    ${t.reason && r.has_product ? `<p class="hint" style="margin-top:4px">${esc(t.reason)}</p>` : ""}</figure>`;
+  }).join("")}</div>
+    ${d.references.some((r) => r.has_product) ? '<p class="hint">기본 처리를 미리 보여 줍니다. 아래 "생성 전에 정할 것"에서 다르게 고르면 확정할 때 반영됩니다.</p>' : ""}` : '<p class="note">레퍼런스 없음</p>';
+  const conflicts = s.conflicts.length ? s.conflicts.map((c, ci) => `<div class="conflict"><p>${esc(c.detail)}</p>
+    ${c.options.map((o, oi) => `<label><input type="radio" name="c${ci}" value="${esc(o)}" ${oi === 0 ? "checked" : ""}> ${esc(o)}</label>`).join("")}</div>`).join("")
+    : '<p class="note">충돌이 없습니다.</p>';
+  $("#specPanel").innerHTML = `<div class="form">
+    ${d.vlm.used ? "" : '<p class="note" style="margin:0">VLM이 꺼져 있어 규칙으로 쓴 초안입니다. 키가 있으면 프린트를 말로 풀어 쓰고, 장면에 필요한 면이 사진에 있는지까지 확인합니다.</p>'}
+    <div><label class="h" for="spScene">원하는 장면</label><textarea id="spScene" rows="2">${esc(s.scene)}</textarea></div>
+    <div><label class="h" for="spKeep">반드시 유지할 조건</label><p class="hint">제품 기준 자료에서 온 조건입니다. 한 줄에 하나씩. 검수가 이 조건을 그대로 확인합니다.</p><textarea id="spKeep" rows="4">${esc(lines(s.keep))}</textarea></div>
+    <div><span class="h" style="display:block;font-weight:600;margin-bottom:4px">레퍼런스에서 참고할 것</span><div class="chips" id="spUse">${ASPECTS.map((a) => `<button class="chip" aria-pressed="${s.reference_use.includes(a)}">${a}</button>`).join("")}</div></div>
+    <div><span class="h" style="display:block;font-weight:600;margin-bottom:4px">레퍼런스</span>${refs}</div>
+    <div><label class="h" for="spIgnore">쓰지 않을 것</label><textarea id="spIgnore" rows="1">${esc(lines(s.reference_ignore))}</textarea></div>
+    <div><label class="h" for="spChange">바꿔도 되는 것</label><textarea id="spChange" rows="2">${esc(lines(s.changeable))}</textarea></div>
+    <div><span class="h" style="display:block;font-weight:600;margin-bottom:6px">생성 전에 정할 것</span>${conflicts}</div>
+    ${s.notes.length ? `<ul class="missing">${s.notes.map((n) => `<li>${esc(n)}</li>`).join("")}</ul>` : ""}
+    <div class="row"><button class="btn primary" id="go4">이 명세로 확정</button><span class="busy" id="busy4" hidden>제작 설정을 만드는 중</span><span class="err" id="err4"></span></div></div>`;
+  $("#spUse").querySelectorAll(".chip").forEach((b) => b.onclick = () => b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true"));
+  $("#go4").onclick = confirmSpec;
+}
+
+async function confirmSpec() {
+  $("#err4").textContent = "";
+  $("#busy4").hidden = false; $("#go4").disabled = true;
+  const s = state.spec.doc.spec;
+  const decisions = s.conflicts.map((c, ci) => (document.querySelector(`input[name=c${ci}]:checked`) || {}).value || "");
+  const spec = {
+    scene: $("#spScene").value.trim(),
+    keep: unlines($("#spKeep").value),
+    reference_use: [...$("#spUse").querySelectorAll(".chip")].filter((b) => b.getAttribute("aria-pressed") === "true").map((b) => b.textContent),
+    reference_ignore: unlines($("#spIgnore").value),
+    changeable: unlines($("#spChange").value),
+    decisions,
+  };
+  try {
+    const r = await fetch("/api/spec/confirm", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sid: state.sid, spec }) });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.detail || `요청 실패 (${r.status})`);
+    state.spec = j;
+    renderKit(j);
+    openStep(5);
+  } catch (e) { $("#err4").textContent = e.message; }
+  finally { $("#busy4").hidden = true; $("#go4").disabled = false; }
+}
+
+function renderKit(j) {
+  const k = j.kit, s = j.doc.spec;
+  const fig = (u, cap) => `<figure><img src="${u}" alt="${esc(cap)}"><figcaption>${esc(cap)}</figcaption></figure>`;
+  const refCap = (u) => {
+    const r = j.doc.references.find((x) => x.treatment && x.treatment.kit && u.endsWith(x.treatment.kit));
+    return r && r.has_product ? `연출 레퍼런스, ${REF_ACTION[r.treatment.action]}` : "연출 레퍼런스";
+  };
+  $("#kitPanel").innerHTML = `
+    <h3 class="sub" style="margin-top:0">상품 이미지 칸</h3>
+    <div class="kitgrid">${k.product.map((u, i) => fig(u, i === 0 ? "대표 면 (프린트 면)" : "면 합본")).join("")}</div>
+    <p class="note">무지 면 사진은 올리지 않습니다. 같이 올리면 크리에이지가 무지 면 사진만 붙인 컷을 만들고, 그 컷은 프린트를 지어냅니다(Run 10: 15컷 중 9컷).</p>
+    ${k.info.length ? `<h3 class="sub">상품정보용 이미지 칸</h3><div class="kitgrid">${k.info.map((u) => fig(u, "정보용")).join("")}</div>` : ""}
+    ${k.design_reference.length ? `<h3 class="sub">디자인 참고 사진</h3><div class="kitgrid">${k.design_reference.map((u) => fig(u, refCap(u))).join("")}</div>` : ""}
+    <h3 class="sub">추가 요청사항 칸</h3>
+    <pre class="box" id="kitText">${esc(s.request_ko)}</pre>
+    <div class="row" style="margin-top:10px"><button class="btn small" id="copyKit">복사</button><a class="btn small" href="${j.kit_zip}">전체 내려받기 (zip)</a></div>
+    <details style="margin-top:14px"><summary class="note">생성 모델용 영어 프롬프트</summary><pre class="box" style="margin-top:8px">${esc(s.prompt_en)}</pre></details>`;
+  $("#copyKit").onclick = async () => {
+    try { await navigator.clipboard.writeText(s.request_ko); $("#copyKit").textContent = "복사했어요"; } catch { $("#copyKit").textContent = "직접 선택해 복사하세요"; }
+  };
+}
+
+function renderOutBtns() {
+  const ex = state.examples.find((e) => e.id === state.example);
+  const box = $("#outBtns");
+  if (!ex) { box.innerHTML = '<span class="note">결과물을 올리세요.</span>'; return; }
+  box.innerHTML = '<span class="note">예시 결과물:</span>';
+  for (const o of ex.outputs) {
+    const b = document.createElement("button");
+    b.className = "btn small"; b.textContent = o.label;
+    b.setAttribute("aria-pressed", "false");
+    b.onclick = () => {
+      state.outEx = state.outEx === o.id ? "" : o.id;
+      box.querySelectorAll("button").forEach((x) => x.classList.toggle("primary", x === b && !!state.outEx));
+      renderOutputs();
+    };
+    box.appendChild(b);
+  }
+}
+
+async function runCheck() {
+  $("#err2").textContent = "";
+  $("#busy2").hidden = false; $("#go2").disabled = true;
+  const fd = new FormData();
+  fd.append("sid", state.sid);
+  fd.append("example_outputs", state.outEx);
+  fd.append("vlm_all", $("#vlmAll").checked ? "true" : "false");
+  for (const o of state.outputs) fd.append("files", o.file, o.name);
+  try {
+    const j = await post("/api/check", fd);
+    state.report = j.report; state.filter = null;
+    renderReport();
+    openStep(7);
+  } catch (e) { $("#err2").textContent = e.message; }
+  finally { $("#busy2").hidden = true; $("#go2").disabled = false; }
+}
+
+function ruler(v, pass, verdict) {
+  const max = 80, w = Math.min(100, (v / max) * 100);
+  return `<div class="ruler" style="--vc:${VC[verdict]}" aria-label="대조 점수 ${v}점, 기준선 ${pass}점">
+    <div class="track"></div><div class="fill" style="width:${w}%"></div>
+    <div class="pass" style="left:${(pass / max) * 100}%"><span>기준선 ${pass}</span></div>
+    <span class="val">${v >= max ? v + "점" : v + "점"}</span></div>`;
+}
+
+function why(v) {
+  if (!v) return "";
+  if (v.error) return `<p class="why err">VLM 호출 실패: ${esc(v.error)}</p>`;
+  const diffs = (v.differences || []).length ? `<ul>${v.differences.map((d) => `<li>${esc(d)}</li>`).join("")}</ul>` : "";
+  return `<p class="why">${esc(v.reason)}${diffs}</p>`;
+}
+
+function chart(v, pass) {
+  const W = 1000, H = 260, n = v.frames.length, max = Math.max(80, ...v.frames.map((f) => f.inliers));
+  const bw = W / Math.max(1, n);
+  const y = (x) => H - 30 - (Math.min(x, max) / max) * (H - 48);
+  const judged = Object.fromEntries((v.vlm || []).map((j) => [j.t, j.verdict]));
+  const bars = v.frames.map((f, i) => {
+    const vd = judged[f.t];
+    const col = vd ? VC[vd] : f.inliers >= pass ? "var(--match)" : "var(--sage)";
+    return `<rect x="${i * bw + 1}" y="${y(f.inliers)}" width="${Math.max(1, bw - 2)}" height="${Math.max(2, H - 30 - y(f.inliers))}" fill="${col}"><title>${f.t}초: ${f.inliers}점${vd ? ", " + V[vd] : ""}</title></rect>`;
+  }).join("");
+  const ticks = v.frames.filter((_, i) => i % Math.ceil(n / 10) === 0).map((f) => `<text x="${v.frames.indexOf(f) * bw + 2}" y="${H - 6}" font-size="20" fill="var(--muted)">${f.t}초</text>`).join("");
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="프레임별 대조 점수">
+    ${bars}<line x1="0" x2="${W}" y1="${y(pass)}" y2="${y(pass)}" stroke="var(--pencil)" stroke-width="2.5" stroke-dasharray="8 5"/>
+    <text x="${W - 4}" y="${y(pass) - 8}" text-anchor="end" font-size="22" fill="var(--pencil)" stroke="var(--sheet)" stroke-width="6" paint-order="stroke">기준선 ${pass}</text>${ticks}</svg>`;
+}
+
+function renderReport() {
+  const r = state.report, pass = r.pass_threshold;
+  const items = [...r.images.map((i) => ({ ...i, kind: "img" })), ...r.videos.map((v) => ({ ...v, kind: "vid" }))];
+  const keys = ["different", "not_visible", "match", "unverified"];
+  let h = `<div class="tally">${keys.map((k) => `<button data-k="${k}" aria-pressed="${state.filter === k}">
+    <span class="n v-${k}">${r.summary[k] || 0}</span><span class="l">${V[k]}</span></button>`).join("")}</div>`;
+  if (!r.vlm.used) h += `<p class="note">VLM이 꺼져 있어 20점 아래는 "확인 필요"로 남깁니다. 지어낸 프린트와 안 보이는 각도가 여기 섞여 있습니다.</p>`;
+  if (r.spec && r.spec.keep) h += `<p class="note" style="margin-bottom:0">${r.spec.confirmed ? "확정한" : "제안된"} 명세의 유지 조건${r.vlm.used ? "을 VLM 판정에 함께 넣었습니다" : " (VLM이 켜지면 판정에 함께 넣습니다)"}:</p><ul class="keeplist note">${r.spec.keep.map((k) => `<li>${esc(k)}</li>`).join("")}</ul>`;
+  const order = { different: 0, unverified: 1, not_visible: 2, match: 3 };
+  const shown = items.filter((i) => !state.filter || i.final === state.filter).sort((a, b) => order[a.final] - order[b.final]);
+  h += `<div class="cards">${shown.map((i) => i.kind === "img" ? imgCard(i, pass) : vidCard(i, pass)).join("")}</div>`;
+  $("#report").innerHTML = h;
+  $("#report").querySelectorAll(".tally button").forEach((b) => b.onclick = () => {
+    state.filter = state.filter === b.dataset.k ? null : b.dataset.k; renderReport();
+  });
+  $("#report").querySelectorAll("[data-vis]").forEach((b) => b.onclick = () => openDlg(b.dataset.vis, b.dataset.title));
+  $("#report").querySelectorAll("[data-fix]").forEach((b) => b.onclick = () => {
+    const rel = b.dataset.fix.split(`/files/${state.sid}/`)[1];
+    setFixSource({ type: "output", rel }, b.dataset.fix, null, "", null);
+    openStep(8);
+  });
+}
+
+function imgCard(i, pass) {
+  return `<article class="card" style="--vc:${VC[i.final]}">
+    <div class="media"><img src="${i.src}" alt="${esc(i.file)}" loading="lazy"></div>
+    <div class="body"><div class="verdict">${V[i.final]}</div>
+    ${ruler(i.inliers, pass, i.final)}
+    ${why(i.vlm)}
+    ${i.vis ? `<button class="linkish" data-vis="${i.vis}" data-title="${esc(i.file)}: 프린트 대조 선">대조 선 보기</button>` : ""}
+    <button class="linkish" data-fix="${esc(i.src)}" data-fname="${esc(i.file)}">이 컷 고치기</button>
+    <div class="fname">${esc(i.file)}</div></div></article>`;
+}
+
+function vidCard(v, pass) {
+  const frames = (v.vlm || []).map((j) => `<figure style="--vc:${VC[j.verdict] || "var(--unver)"}"><img src="${j.frame_url}" alt="${j.t}초 프레임">
+    <figcaption><b style="color:var(--vc)">${j.t}초, ${V[j.verdict] || "판정 실패"}</b><br>${esc(j.reason || j.error || "")}</figcaption></figure>`).join("");
+  const dip = v.dip_at.length ? `${v.dip_at[0]}초부터 ${v.dip_at[v.dip_at.length - 1]}초 사이에 ${v.dip_at.length}프레임이 기준선 아래로 떨어집니다.` : "모든 프레임이 기준선 위입니다.";
+  return `<article class="card wide" style="--vc:${VC[v.final]}">
+    <div class="body"><div class="row" style="justify-content:space-between"><div class="verdict">${V[v.final]}</div><div class="fname">${esc(v.file)}</div></div>
+    <div style="display:grid;grid-template-columns:minmax(200px,320px) 1fr;gap:16px;align-items:center">
+      <video src="${v.src}" controls muted style="width:100%;max-height:340px;border-radius:4px;background:#000"></video>
+      <div>${chart(v, pass)}<p class="why">${dip} 최저 ${v.min}점, 중앙값 ${v.median}점.</p></div></div>
+    ${frames ? `<div class="frames">${frames}</div>` : ""}</div></article>`;
+}
+
+function openDlg(src, title) {
+  $("#dlgImg").src = src; $("#dlgTitle").textContent = title; $("#dlg").showModal();
+}
+$("#dlgClose").onclick = () => $("#dlg").close();
+$("#dlg").onclick = (e) => { if (e.target === $("#dlg")) $("#dlg").close(); };
+
+// ---------------------------------------------------------------- 8, 9: fix request and fix check
+const AREA = ["area_erase", "area_print", "area_text", "move"];
+const VERD = { pass: "통과", review: "확인 필요", redrawn: "다시 그려짐", changes: "바뀐 곳 있음", unchanged: "바뀐 곳 없음" };
+const LEVEL = { same: "그대로", minor: "배경 질감만 바뀜", major: "바뀜", redrawn: "대부분 다시 그려짐" };
+const FIX = { opts: null, src: null, url: null, box: null, point: null, mode: "box", target: "image", kind: "", tried: 0, card: null, id: null, how: null, after: null, afterHow: "area", drag: null };
+const TRIED = [[0, "처음"], [1, "1번 실패"], [2, "2번 이상"]];
+
+function chipRow(sel, items, cur, onPick) {
+  const box = $(sel);
+  box.innerHTML = items.map(([v, l]) => `<button class="chip" data-v="${esc(v)}" aria-pressed="${String(v) === String(cur)}">${esc(l)}</button>`).join("");
+  box.querySelectorAll(".chip").forEach((b) => b.onclick = () => { onPick(b.dataset.v); box.querySelectorAll(".chip").forEach((x) => x.setAttribute("aria-pressed", x === b)); });
+}
+
+async function initFix() {
+  FIX.opts = await (await fetch("/api/fix-options")).json();
+  chipRow("#fixTarget", Object.entries(FIX.opts.targets), FIX.target, (v) => { FIX.target = v; });
+  chipRow("#fixKind", [["", "자동 추정"], ...Object.entries(FIX.opts.kinds)], FIX.kind, (v) => { FIX.kind = v; });
+  chipRow("#fixTried", TRIED, FIX.tried, (v) => { FIX.tried = +v; });
+  $("#paintMode").querySelectorAll(".chip").forEach((b) => b.onclick = () => {
+    FIX.mode = b.dataset.m;
+    $("#paintMode").querySelectorAll(".chip").forEach((x) => x.setAttribute("aria-pressed", x === b));
+  });
+  $("#fixHow").querySelectorAll(".chip").forEach((b) => b.onclick = () => setHow(b.dataset.h));
+}
+
+function setHow(h) {
+  FIX.afterHow = h;
+  $("#fixHow").querySelectorAll(".chip").forEach((x) => x.setAttribute("aria-pressed", x.dataset.h === h));
+}
+
+function renderFixEx() {
+  const ex = state.examples.find((e) => e.id === state.example);
+  const box = $("#fixEx");
+  if (!ex || !(ex.fixes || []).length) { box.innerHTML = '<span class="note">7단계 리포트에서 "이 컷 고치기"를 누르거나 이미지를 올리세요.</span>'; return; }
+  box.innerHTML = '<span class="note">크리에이지에서 실제로 고친 예시:</span>';
+  for (const f of ex.fixes) {
+    const b = document.createElement("button");
+    b.className = "btn small"; b.textContent = f.label;
+    b.onclick = () => {
+      box.querySelectorAll("button").forEach((x) => x.classList.toggle("primary", x === b));
+      setFixSource({ type: "example", id: f.id }, f.src, f.box, f.text, f.how);
+    };
+    box.appendChild(b);
+  }
+}
+
+function setFixSource(src, url, box, text, how) {
+  FIX.src = src; FIX.url = url; FIX.box = box ? [...box] : null; FIX.point = null; FIX.how = how; FIX.card = null; FIX.id = null; FIX.after = null;
+  if (text !== null) $("#fixText").value = text || "";
+  const img = $("#paintImg");
+  img.onload = () => { $("#paintEmpty").hidden = true; img.hidden = false; drawPaint(); };
+  img.src = url;
+  $("#paintProd").hidden = true;
+  $("#fixCard").innerHTML = ""; $("#fixResult").innerHTML = "";
+  $("#go8").disabled = !state.sid;
+  resetStep9();
+}
+
+function natScale() {
+  const img = $("#paintImg");
+  return img.clientWidth ? img.naturalWidth / img.clientWidth : 1;
+}
+
+function place(el, b) {
+  const k = natScale();
+  el.style.left = b[0] / k + "px"; el.style.top = b[1] / k + "px";
+  el.style.width = (b[2] - b[0]) / k + "px"; el.style.height = (b[3] - b[1]) / k + "px";
+  el.hidden = false;
+}
+
+function drawPaint() {
+  const k = natScale();
+  if (FIX.box) place($("#paintSel"), FIX.box); else $("#paintSel").hidden = true;
+  if (FIX.prod) place($("#paintProd"), FIX.prod); else $("#paintProd").hidden = true;
+  const pt = $("#paintPt");
+  if (FIX.point) { pt.style.left = FIX.point[0] / k + "px"; pt.style.top = FIX.point[1] / k + "px"; pt.hidden = false; } else pt.hidden = true;
+  const parts = [];
+  if (FIX.box) parts.push(`칠한 곳 (${FIX.box[0]}, ${FIX.box[1]})-(${FIX.box[2]}, ${FIX.box[3]})`);
+  if (FIX.point) parts.push(`정답 자리 (${FIX.point[0]}, ${FIX.point[1]})`);
+  if (FIX.prod) parts.push("초록 점선은 찾은 제품 위치");
+  $("#paintInfo").textContent = parts.join(" / ") || (FIX.url ? "이미지 위를 끌어서 고칠 곳을 칠하세요." : "");
+}
+
+function paintPos(e) {
+  const r = $("#paintImg").getBoundingClientRect(), k = natScale();
+  const x = Math.max(0, Math.min(r.width, e.clientX - r.left)), y = Math.max(0, Math.min(r.height, e.clientY - r.top));
+  return [Math.round(x * k), Math.round(y * k)];
+}
+
+function wirePaint() {
+  const p = $("#paint");
+  p.onpointerdown = (e) => {
+    if ($("#paintImg").hidden) return;
+    const [x, y] = paintPos(e);
+    if (FIX.mode === "point") { FIX.point = [x, y]; drawPaint(); return; }
+    FIX.drag = [x, y]; p.setPointerCapture(e.pointerId);
+  };
+  p.onpointermove = (e) => {
+    if (!FIX.drag) return;
+    const [x, y] = paintPos(e), [x0, y0] = FIX.drag;
+    FIX.box = [Math.min(x0, x), Math.min(y0, y), Math.max(x0, x), Math.max(y0, y)];
+    drawPaint();
+  };
+  p.onpointerup = () => {
+    if (FIX.drag && FIX.box && (FIX.box[2] - FIX.box[0] < 8 || FIX.box[3] - FIX.box[1] < 8)) FIX.box = null;
+    FIX.drag = null; drawPaint();
+  };
+  $("#paintClear").onclick = () => { FIX.box = null; FIX.point = null; drawPaint(); };
+  addEventListener("resize", drawPaint);
+}
+
+async function getCard() {
+  $("#err8").textContent = "";
+  $("#busy8").hidden = false; $("#go8").disabled = true;
+  const fd = new FormData();
+  fd.append("sid", state.sid);
+  fd.append("text", $("#fixText").value.trim());
+  fd.append("kind", FIX.kind);
+  fd.append("target", FIX.target);
+  fd.append("box", FIX.box ? FIX.box.join(",") : "");
+  fd.append("point", FIX.point ? FIX.point.join(",") : "");
+  fd.append("tried", String(FIX.tried));
+  if (FIX.src.type === "example") fd.append("example_fix", FIX.src.id);
+  else if (FIX.src.type === "output") fd.append("output", FIX.src.rel);
+  else fd.append("file", FIX.src.file, FIX.src.file.name);
+  try {
+    const j = await post("/api/suggest", fd);
+    FIX.card = j.card; FIX.id = j.fix;
+    FIX.prod = j.product_box; drawPaint();
+    renderFixCard(j.card);
+    resetStep9();
+    $("#fixCard").scrollIntoView({ behavior: smooth(), block: "start" });
+  } catch (e) { $("#err8").textContent = e.message; }
+  finally { $("#busy8").hidden = true; $("#go8").disabled = false; }
+}
+
+function renderFixCard(c) {
+  const POSS = { yes: "가능", ask: "확인 필요", no: "불가" };
+  const w = c.where || {};
+  let spot = w.box ? `칠한 곳 (${w.box[0]}, ${w.box[1]})-(${w.box[2]}, ${w.box[3]})` : (c.target === "text_layer" || c.target === "page") ? `선택한 ${c.target_ko}` : "지정 안 됨";
+  if (w.point) spot += ` / 정답 자리 (${w.point[0]}, ${w.point[1]})`;
+  const kind = c.kind
+    ? `${esc(c.kind_ko)} <span class="note">${c.kind_from === "selected" ? "직접 고름" : "요청 글에서 추정" + (c.kind_words.length ? ": " + c.kind_words.map((x) => `"${esc(x)}"`).join(", ") : "") + ". 다르면 바꿔 주세요"}</span>`
+    : '<span class="note">고르지 않음</span>';
+  const attach = c.attach.length
+    ? `<div class="attach">${c.attach.map((a) => `<figure>${a.url ? `<img src="${a.url}" alt="">` : ""}${esc(a.why)}</figure>`).join("")}</div>`
+    : "없음";
+  const cost = c.cost ? `<span class="cost">${esc(c.cost_ko || c.cost + "크레딧")}</span><br><span class="note">${esc(c.charge_ko)}</span>` : '<span class="cost">무료</span>';
+  const first = c.first ? `<br><span class="note">먼저 시작 이미지: ${esc(c.first.method_ko)}, ${c.first.cost}크레딧</span>` : "";
+  const choices = c.choices ? `<dt>고를 종류</dt><dd><div class="chips">${c.choices.map((k) => `<button class="chip" data-pick="${k}">${esc(FIX.opts.kinds[k])}</button>`).join("")}</div></dd>` : "";
+  const alt = c.alternatives.length ? `<div class="fc-alt"><b>다른 방법</b><ul>${c.alternatives.map((a) => `<li>${esc(a.method_ko)} (${a.cost ? a.cost + "크레딧" : "무료"}): ${esc(a.when)}</li>`).join("")}</ul></div>` : "";
+  const go = c.possible === "yes" && !["choose", "shoot"].includes(c.method);
+  $("#fixCard").innerHTML = `<div class="fixcard">
+    <div class="fc-h"><b>수정 확인 카드</b><span class="poss ${c.possible}">${POSS[c.possible]}</span></div>
+    <dl class="fc">
+      <dt>고칠 곳</dt><dd>${esc(spot)}</dd>
+      <dt>종류</dt><dd>${kind}</dd>
+      ${c.text ? `<dt>바꿀 내용</dt><dd>${esc(c.text)}</dd>` : ""}
+      <dt>유지할 것</dt><dd><ul>${c.keep.map((k) => `<li>${esc(k)}</li>`).join("")}</ul></dd>
+      <dt>붙일 사진</dt><dd>${attach}</dd>
+      <dt>처리 방식</dt><dd><b>${esc(c.method_ko || "")}</b>${c.tool ? `<br><span class="note">${esc(c.tool)}</span>` : ""}${first}</dd>
+      ${c.request_ko ? `<dt>요청문</dt><dd><pre class="box" id="fixReq">${esc(c.request_ko)}</pre><button class="btn small" id="copyReq" style="margin-top:8px">복사</button></dd>` : ""}
+      <dt>비용</dt><dd>${cost}</dd>
+      <dt>가능 여부</dt><dd><b class="poss ${c.possible}" style="padding:0;background:none">${POSS[c.possible]}</b>${c.possible !== "yes" && c.possible_ko ? ". " + esc(c.possible_ko) : ""}</dd>
+      ${choices}
+      ${c.after && c.after.check_ko ? `<dt>고친 뒤</dt><dd>${esc(c.after.check_ko)}${c.after.fail_ko ? `<br><span class="note">${esc(c.after.fail_ko)}</span>` : ""}</dd>` : ""}
+    </dl>
+    ${c.warnings.length ? `<ul class="fc-warn">${c.warnings.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+    ${alt}
+    <div class="fc-act"><button class="btn primary" id="fixGo" ${go ? "" : "disabled"}>${c.cost ? `이대로 진행 (${esc(c.cost_ko ? c.cost_ko.split("(")[0] : c.cost + "크레딧")})` : "이대로 진행 (무료)"}</button>
+      <button class="btn" id="fixAgain">다시 설명 (무료)</button>
+      ${go ? "" : `<span class="note">${c.possible === "no" ? "불가한 수정이라 진행하지 않습니다. 크레딧은 쓰지 않았습니다." : "위의 확인 필요 항목을 채운 뒤 카드를 다시 보세요."}</span>`}</div></div>`;
+  const cp = $("#copyReq");
+  if (cp) cp.onclick = async () => { try { await navigator.clipboard.writeText(c.request_ko); cp.textContent = "복사했어요"; } catch { cp.textContent = "직접 선택해 복사하세요"; } };
+  $("#fixAgain").onclick = () => { $("#fixText").focus(); $("#s8").scrollIntoView({ behavior: smooth() }); };
+  $("#fixGo").onclick = startStep9;
+  $("#fixCard").querySelectorAll("[data-pick]").forEach((b) => b.onclick = () => {
+    FIX.kind = b.dataset.pick;
+    $("#fixKind").querySelectorAll(".chip").forEach((x) => x.setAttribute("aria-pressed", x.dataset.v === FIX.kind));
+    getCard();
+  });
+}
+
+function resetStep9() {
+  FIX.after = null;
+  $("#fixAfterBtns").innerHTML = ""; $("#thumbs9").innerHTML = ""; $("#fixResult").innerHTML = "";
+  $("#fixAfterLead").textContent = '8단계에서 "이대로 진행"을 누르면 시작합니다.';
+  $("#go9").disabled = true;
+}
+
+function startStep9() {
+  const c = FIX.card;
+  $("#fixAfterLead").textContent = `크리에이지에서 "${c.method_ko}"(으)로 고친 뒤 결과를 넣으세요. 이 데모는 크리에이지를 직접 부르지 않습니다.`;
+  setHow(FIX.how || (AREA.includes(c.method) ? "area" : "chat"));
+  const box = $("#fixAfterBtns");
+  box.innerHTML = "";
+  if (FIX.src.type === "example") {
+    const b = document.createElement("button");
+    b.className = "btn small"; b.textContent = "크리에이지 실제 결과 불러오기";
+    b.onclick = () => {
+      FIX.after = { example: true };
+      b.classList.add("primary");
+      const ex = state.examples.find((e) => e.id === state.example);
+      $("#thumbs9").innerHTML = `<figure class="thumb"><div class="img"><img src="/api/fix-file/${ex.id}/${FIX.src.id}/after" alt=""></div><figcaption><span>크리에이지 결과 (${FIX.how === "chat" ? "채팅" : "영역 편집"}, 5크레딧)</span></figcaption></figure>`;
+      $("#go9").disabled = false;
+    };
+    box.appendChild(b);
+  }
+  $("#s9").classList.remove("idle");
+  openStep(9);
+}
+
+async function runFixCheck() {
+  $("#err9").textContent = "";
+  $("#busy9").hidden = false; $("#go9").disabled = true;
+  const fd = new FormData();
+  fd.append("sid", state.sid);
+  fd.append("fix", FIX.id);
+  fd.append("how", FIX.afterHow);
+  if (FIX.after.example) fd.append("example_after", "true");
+  else fd.append("file", FIX.after.file, FIX.after.file.name);
+  try {
+    const j = await post("/api/fix", fd);
+    renderFixResult(j);
+  } catch (e) { $("#err9").textContent = e.message; }
+  finally { $("#busy9").hidden = true; $("#go9").disabled = false; }
+}
+
+function renderFixResult(j) {
+  const im = j.images, r = j.restore, a = j.as_is, k = j.checked;
+  const score = (x) => x && x.print ? `${x.print.before} → ${x.print.after}` : "-";
+  const outside = (x) => x && x.outside ? (x.outside.level ? `${LEVEL[x.outside.level] || x.outside.level}${x.outside.areas && x.outside.areas.length ? `, ${x.outside.areas.length}곳` : ""}` : (x.outside.verdict === "redrawn" ? "대부분 다시 그려짐" : "-")) : "-";
+  let h = "";
+  if (!r.restored) {
+    h += `<p class="headline" style="color:var(--diff)">원본으로 덮을 수 없어요</p>
+      <div class="trio"><figure style="--vc:var(--ink)"><img src="${im.before}" alt=""><figcaption>수정 전</figcaption></figure>
+      <figure style="--vc:var(--diff)"><img src="${im.after}" alt=""><figcaption>크리에이지 결과</figcaption></figure></div>`;
+  } else {
+    h += `<p class="headline" style="color:var(--match)">${j.next_checked && j.next_checked.next === "show" ? "원본으로 덮은 결과를 보여 주면 돼요" : "덮은 뒤에도 확인이 필요해요"}</p>
+      <div class="trio">
+        <figure style="--vc:var(--ink)"><img src="${im.before}" alt="수정 전"><figcaption>수정 전 (원본)</figcaption></figure>
+        <figure style="--vc:var(--unver)"><img src="${im.after}" alt="크리에이지 결과"><figcaption>크리에이지 결과 그대로</figcaption></figure>
+        <figure style="--vc:var(--match)"><img src="${im.restored}" alt="원본 덮기 결과"><figcaption>원본 덮기 후 (보여 줄 이미지)</figcaption></figure>
+      </div>`;
+  }
+  h += `<table class="cmp"><thead><tr><th></th><th>크리에이지 결과 그대로</th>${k ? "<th>원본 덮기 후</th>" : ""}</tr></thead><tbody>
+    <tr><th>판정</th><td>${a ? esc(VERD[a.verdict] || a.verdict) : "-"}</td>${k ? `<td>${esc(VERD[k.verdict] || k.verdict)}</td>` : ""}</tr>
+    <tr><th>고친 곳 밖</th><td>${esc(outside(a))}</td>${k ? `<td>${esc(outside(k))}</td>` : ""}</tr>
+    <tr><th>실물 프린트 점수</th><td class="n">${esc(score(a))}</td>${k ? `<td class="n">${esc(score(k))}</td>` : ""}</tr>
+    <tr><th>다음 단계</th><td>${j.next_as_is ? esc(j.next_as_is.next_ko) : "-"}${j.next_as_is && j.next_as_is.why.length ? `<br><span class="note">${esc(j.next_as_is.why.join(", "))}</span>` : ""}</td>${k ? `<td>${j.next_checked ? esc(j.next_checked.next_ko) : "-"}</td>` : ""}</tr>
+  </tbody></table>`;
+  h += `<ul class="missing">${(r.notes_ko || []).map((n) => `<li>${esc(n)}</li>`).join("")}</ul>`;
+  const links = [];
+  if (im.as_is_vis) links.push(`<button class="linkish" data-vis="${im.as_is_vis}" data-title="크리에이지 결과에서 바뀐 곳 (수정 전 | 결과 | 바뀐 곳)">크리에이지 결과에서 바뀐 곳 보기</button>`);
+  if (im.check_vis) links.push(`<button class="linkish" data-vis="${im.check_vis}" data-title="원본 덮기 결과 검수 (수정 전 | 덮은 결과 | 바뀐 곳)">덮은 결과 검수 그림 보기</button>`);
+  if (links.length) h += `<div class="row">${links.join("")}</div>`;
+  $("#fixResult").innerHTML = `<div class="fixres">${h}</div>`;
+  $("#fixResult").querySelectorAll("[data-vis]").forEach((b) => b.onclick = () => openDlg(b.dataset.vis, b.dataset.title));
+  $("#fixResult").scrollIntoView({ behavior: smooth(), block: "start" });
+}
+
+wireDrop("#drop1", "#file1", (fl) => { if (state.example) { state.example = ""; } addFiles(fl, state.uploads); renderUploads(); });
+wireDrop("#drop2", "#file2", (fl) => { addFiles(fl, state.outputs); renderOutputs(); });
+wireDrop("#drop3", "#file3", (fl) => { addFiles(fl, state.sceneRefs); state.exampleRefs = false; state.sceneRefs = state.sceneRefs.filter((o) => o.file); renderSceneRefs(); });
+$("#withCap").onchange = renderUploads;
+$("#go1").onclick = makeRefset;
+$("#go3").onclick = proposeSpec;
+$("#go2").onclick = runCheck;
+$("#go8").onclick = getCard;
+$("#go9").onclick = runFixCheck;
+wireDrop("#drop8", "#file8", (fl) => { if (fl[0]) setFixSource({ type: "upload", file: fl[0] }, URL.createObjectURL(fl[0]), null, "", null); $("#fixEx").querySelectorAll("button").forEach((x) => x.classList.remove("primary")); });
+wireDrop("#drop9", "#file9", (fl) => {
+  if (!fl[0] || !FIX.card) return;
+  FIX.after = { file: fl[0] };
+  $("#fixAfterBtns").querySelectorAll("button").forEach((x) => x.classList.remove("primary"));
+  $("#thumbs9").innerHTML = `<figure class="thumb"><div class="img"><img src="${URL.createObjectURL(fl[0])}" alt=""></div><figcaption><span>${esc(fl[0].name.slice(0, 18))}</span></figcaption></figure>`;
+  $("#go9").disabled = false;
+});
+wirePaint();
+init().then(initFix);
+</script>
+</body>
+</html>

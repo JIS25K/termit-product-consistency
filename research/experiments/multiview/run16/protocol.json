@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-18",
+  "status": "frozen_before_generation",
+  "question": "Single-product practical comparison of MV-Adapter jointly generated views versus built-in independent target-view generation; not a causal adapter ablation",
+  "input": "LOCAL_INPUT_REQUIRED",
+  "input_sha256": "b79e84aa7e36d60164aa9bf013f9cbf3efd95e262fc086fe306a66f40fed364b",
+  "eval_only": [
+    "output/product_candidate_0695_0698/IMG_0698.jpg"
+  ],
+  "target": "Bundle-side profile, face pointing image-right, approximately horizontal camera. Exact angular accuracy unscorable with uncalibrated elevated held-out photo.",
+  "multiview": {
+    "url": "https://huggingface.co/spaces/VAST-AI/MV-Adapter-I2MV-SDXL",
+    "seed": 0,
+    "randomize_seed": false,
+    "steps": 30,
+    "cfg": 3,
+    "image_conditioning_scale": 1,
+    "remove_background": true,
+    "prompt": "A product photograph of the exact blue figurine in the reference image, with its cream belly, tall ears, yellow bundle and original pose. Preserve the physical product shape, proportions, parts and their attachment. Plain gray background.",
+    "negative_prompt": "watermark, ugly, deformed, noisy, blurry, low contrast",
+    "view_degrees": [
+      0,
+      45,
+      90,
+      180,
+      270,
+      315
+    ],
+    "primary_output_index_zero_based": 2,
+    "output_selection": "preselected index 2; retain all six views, no best-of selection"
+  },
+  "baseline": {
+    "tool": "built-in imagegen",
+    "input_policy": "Use demo preprocessed source if returned, never generated views or held-out photo; otherwise same original input, disclose preprocessing mismatch",
+    "prompt": "Create one product photograph of the exact physical figurine in the input image from its bundle-side profile: the face points to image-right. Use a horizontal, eye-level camera, approximately orthographic product framing, plain gray background, soft neutral light, whole product visible. Preserve the product shape, proportions, parts and their attachments and original pose. Do not redesign it or substitute a generic character. Generate only one view, no collage or text."
+  },
+  "budget": {
+    "multiview_successful_calls": 1,
+    "baseline_successful_calls": 1,
+    "quality_rerolls": 0,
+    "technical_retry_max": 1
+  },
+  "rubric": [
+    "target profile achieved",
+    "ears/body/limbs proportions",
+    "yellow bundle/hand/knot attachment",
+    "no major part addition or removal"
+  ],
+  "success": "target AND real-product structure pass; unknown hidden details are not hallucination-proof; no logo exists on this product",
+  "limits": [
+    "one product one run",
+    "different models, preprocessing and output budget",
+    "held-out camera not calibrated",
+    "input is one photograph; unseen surfaces inferred",
+    "operator knows conditions; human review pending",
+    "not Creazy execution environment"
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "run": 31,
+  "phase": "single local product-training trial",
+  "training": {
+    "model": "stabilityai/stable-diffusion-xl-base-1.0",
+    "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+    "steps": 200,
+    "rank": 4,
+    "resolution": 768,
+    "batch_size": 1,
+    "learning_rate": 0.0001,
+    "seed": 31,
+    "restarts_for_quality": 0,
+    "pilot_weights_loaded": false,
+    "train_text_encoders": false,
+    "prior_preservation": false,
+    "real_photos": 12
+  },
+  "split": {
+    "train_N1_angles": [
+      0,
+      30,
+      90,
+      120,
+      150,
+      180,
+      210,
+      270,
+      300,
+      330
+    ],
+    "train_N2_angles": [
+      0,
+      180
+    ],
+    "heldout_N1_angles": [
+      60,
+      240
+    ],
+    "minimum_angular_gap": 30,
+    "note": "N1_60 was seen in Run30, so evaluation is held out of this training, not a blind unseen-by-researcher test."
+  },
+  "comparison": {
+    "arms": [
+      "SDXL base",
+      "same SDXL + product LoRA",
+      "ordinary built-in image generation with 12 training-photo references"
+    ],
+    "views": [
+      "A front three-quarter",
+      "B rear three-quarter"
+    ],
+    "samples_per_view": 2,
+    "sdxl_seeds": [
+      3101,
+      3102
+    ],
+    "sdxl_inference_steps": 30,
+    "sdxl_guidance_scale": 7,
+    "sdxl_scheduler": "EulerDiscreteScheduler from fixed model",
+    "canvas": [
+      768,
+      768
+    ],
+    "ordinary_seed_control": false,
+    "ordinary_input": "same 12 photos as training, collaged without generated content; no heldout photos",
+    "same_model_causal_comparison": "SDXL base versus same model + LoRA, same text/seed/sampler",
+    "practical_comparison": "LoRA pipeline versus ordinary tool; different base models and reference delivery, not a causal test of training alone"
+  },
+  "common_brief": "Photorealistic product advertisement: one red and black BLACK&DECKER cordless drill standing upright on matte oak workbench, warm soft light from upper left, softly blurred workshop background. Whole drill visible and centered, no hand or extra tools, no advertising headline, physically grounded contact shadow. Preserve actual product identity: cylindrical black chuck and white torque ring; rounded red motor body with vents; black trigger/grip inserts; slim curved integrated lower base with white LITHIUM panel. No invented bulky removable battery pack.",
+  "view_text": {
+    "A": "front three-quarter view looking toward the chuck; chuck points to upper right and slightly toward camera; side of red body and trigger visible",
+    "B": "rear three-quarter view looking toward rounded rear motor cap; chuck recedes toward upper left; rear of grip visible"
+  },
+  "gate": {
+    "identity_checks": [
+      "chuck and white torque collar",
+      "motor-body silhouette and vents",
+      "trigger and body-to-grip joint",
+      "grip proportions",
+      "integrated curved base without invented battery pack"
+    ],
+    "primary": "Clear useful structural/identity advantage over ordinary generation in BOTH views without worse scene naturalness; one lucky sample is insufficient",
+    "secondary": "Before/after SDXL identifies adaptation effects; not sufficient alone for adoption",
+    "manual_output_repair": 0,
+    "quality_rerolls": 0,
+    "selection": "show every first output; no cherry picking",
+    "fail_action": "stop this configuration without retraining or seed tuning",
+    "evaluation": "assistant visual review, not blinded human panel or exact camera-registered geometric certification"
+  },
+  "generation_prompts": {
+    "A": "Photo of sksdrill BLACK&DECKER cordless drill, front three-quarter view, chuck pointing right toward viewer. Red housing, black grip, white torque ring, curved integrated base. Whole product upright on oak workbench, warm left light, blurred workshop, realistic contact shadow.",
+    "B": "Photo of sksdrill BLACK&DECKER cordless drill, rear three-quarter view, rear cap toward viewer, chuck pointing left away. Red housing, black grip, white torque ring, curved integrated base. Whole product upright on oak workbench, warm left light, blurred workshop, realistic contact shadow."
+  },
+  "implementation_correction": {
+    "reason": "Original 154-token prompt truncated viewpoint beyond77-token CLIP limit",
+    "detected_by": "same-seed output hashes identical across views; tokenizer warning; before visual quality assessment or product training",
+    "excluded_outputs": 4,
+    "retained_in": "outputs/invalid_truncated_prompt",
+    "corrected_token_lengths": {
+      "A": 58,
+      "B": 62
+    },
+    "quality_rerolls": 0
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "experiment":"Run 27 — source-part registration under a straight-axis constraint",
+  "date":"2026-11-18",
+  "objective":"Repair the previously rejected pen C result: straight exposed metal nib, source-like nib/body proportions and stepped connector, while retaining the existing body and composition.",
+  "common_input":"../../edit_agent/run15/images/agent_C.png",
+  "references":["../../edit_agent/run15/frozen/assets/asset_12.webp","../../edit_agent/run15/frozen/assets/asset_11.webp","../../edit_agent/run15/frozen/assets/asset_14.webp"],
+  "arms":{"baseline":"One ordinary built-in image edit with identical target and three references, explicit straightness/proportion/connector and preservation requirements; no retries.","candidate":"Register the actual reference front assembly (nib + stepped connector) once; map it rigidly to the existing body axis and diameter. Replace only the old front assembly, restore its plain background locally. No generated replacement part."},
+  "changed":"Part pixels and geometry are determined from the reference instead of resynthesized by a generative model.",
+  "fixed":"Target image, reference images, desired part geometry, body anchor, scene, crop and success criteria. No best-of selection.",
+  "manual_setup":"Source front ROI and target old-front repair area/body attachment selected once by assistant. This is an assisted feasibility experiment, not automatic registration. Count registration edits, and record code execution separately from setup.",
+  "gates":{"straightness":"Centerline p95 deviation <=1px at 1672px evaluation width; inspect silhouettes too because a line score alone is insufficient.","proportion":"Visible metal length/body diameter within 10% of the provided side reference, only for this approximately side-on target; not physical millimeter metrology.","structure":"Short stepped connector, distinct felt nib, no invented clip near the tip, no gap at the body join.","preservation":"No changes outside the declared front repair region for the candidate; report corresponding ordinary-edit change. Metric alone does not imply better overall appearance.","overall":"Visible local improvement over input and baseline without a new seam/background/material defect; user acceptance remains unmeasured."},
+  "stop":"Do not tune after seeing baseline output. If no meaningful improvement, run one different supported case from available customer records rather than merely replacing the webpage.",
+  "limits":["One known development failure, not unseen validation","Same approximate side view; not arbitrary novel-view generation","Manual source and target registration","Plain background makes removal easier; no occluded-hand/background reconstruction claim","Catalog comparison image is a provided product reference, not calibrated target-view ground truth"]
+}

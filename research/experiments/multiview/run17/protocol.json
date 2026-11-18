@@ -1,0 +1,75 @@
+{
+  "date": "2026-11-18",
+  "status": "frozen_before_product_generation",
+  "hypothesis": "Same multi-view-capable model uses extra observed real views to improve shape in a withheld target view",
+  "model": "tencent/Hunyuan3D-2mv/hunyuan3d-dit-v2-mv-turbo",
+  "demo": "https://tencent-hunyuan3d-2mv.hf.space",
+  "scope": "Untextured shape only; no conclusion about logo/color/texture or full advertising accuracy",
+  "photos": {
+    "front": {
+      "file": "LOCAL_INPUT_REQUIRED",
+      "sha256": "b79e84aa7e36d60164aa9bf013f9cbf3efd95e262fc086fe306a66f40fed364b"
+    },
+    "left": {
+      "file": "LOCAL_INPUT_REQUIRED",
+      "sha256": "acbdff08bbb4630ce73c9701ef6cb43da943b54c8bbf2925dce6c3fa1515c946"
+    },
+    "back": {
+      "file": "LOCAL_INPUT_REQUIRED",
+      "sha256": "4ff0cb3ec295529d054915f4167c785afd2ffd29637740bf9e48e1bdc5609d68"
+    },
+    "heldout_right": {
+      "file": "LOCAL_INPUT_REQUIRED",
+      "sha256": "47d9f216863f406f21342dd47fd2ff18d595e3b1d2bbc1582525120f85d9c5ef"
+    }
+  },
+  "arms": {
+    "A": [
+      "front"
+    ],
+    "B": [
+      "front",
+      "back",
+      "left"
+    ]
+  },
+  "settings": {
+    "seed": 1234,
+    "randomize_seed": false,
+    "steps": 5,
+    "guidance": 5,
+    "octree": 256,
+    "chunks": 8000,
+    "remove_bg": true
+  },
+  "target": "right/bundle-side view, face points screen-right; elevated camera approximately matching real photos, no exact calibrated angular claim",
+  "render": "same fixed camera for both outputs; determine on public example before product results, save calibration separately",
+  "rubric": [
+    "ears/body proportions",
+    "bundle overall volume and placement",
+    "bundle-hand-knot connection",
+    "limbs and tail major shape",
+    "target view achieved"
+  ],
+  "observability": "front and back jointly show bundle size/position; tiny claw details and fully occluded surfaces excluded",
+  "input_exclusion": "0698 never uploaded or used to build shape. No target-specific feature text is supplied.",
+  "budget": {
+    "successful_product_calls_per_arm": 1,
+    "quality_rerolls": 0,
+    "technical_retry_limit": 1
+  },
+  "decision": {
+    "B_better": "candidate evidence within one product, repeat before adoption",
+    "both_pass": "no added value observed",
+    "both_fail": "multi-real-input alone not sufficient in this setup; do not infer 3D generally fails",
+    "B_worse": "inspect slot geometry and preprocessing before conclusions"
+  },
+  "limits": [
+    "one object one seed",
+    "elevated uncalibrated consumer photos assigned approximate canonical slots",
+    "shape-only model",
+    "one target side missing; this is view completion not arbitrary-angle exact calibration",
+    "same seed does not imply identical latent random trajectory",
+    "operator knows arm, no human labels yet"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "experiment": "run21-source-structure-aware-selection",
+  "date": "2026-11-18",
+  "product": "YCB 003_cracker_box",
+  "source_images": [
+    "N2_0.jpg",
+    "N2_60.jpg",
+    "N2_120.jpg",
+    "N2_180.jpg",
+    "N2_240.jpg",
+    "N2_300.jpg"
+  ],
+  "target_images": [
+    "N2_21.jpg",
+    "N2_27.jpg",
+    "N2_39.jpg",
+    "N2_45.jpg"
+  ],
+  "baseline_policy": "Apply unchanged Run20 score to the same fresh candidates; freeze its winner alongside the augmented-score winner.",
+  "fixed_angle_control": "N2_27.jpg",
+  "fixed_control_reason": "Closest fresh candidate to previous allowed-range midpoint 33deg; 27/39 tie resolves to smaller angle.",
+  "allowed_table_rotation_degrees": [
+    18,
+    48
+  ],
+  "minimum_source_distance_degrees": 12,
+  "required_composition": "front face >=40%, right face >=5% of visible modeled area; original front logo readable; new viewpoint, no exact-angle customer requirement",
+  "fixed": "Run19 source photos, source annotations, frozen cuboid and byte-identical renderer/common code; 1600x1067 and same camera calibration. NO geometry refit for rendering.",
+  "added_signal": "For scoring only, independently triangulate each physical corner from source annotations, then robustly refine each 3D point against source pixels (soft_l1, f_scale=2). Project this source-derived reference and frozen cuboid into each candidate. Do not render from the reference geometry.",
+  "selection_rule": {
+    "old_score": "10*(uncovered_fraction + out_of_bounds_fraction) + area-weighted mean(abs(log2(sigma1))+abs(log2(sigma2)))/2",
+    "structure_px": "0.5*(median visible-corner displacement + median displacement along shared visible-face seams), reference vs frozen cuboid, in candidate pixels",
+    "combined_score": "old_score + structure_px/5",
+    "scale_reason": "One predeclared heuristic: 5px structural discrepancy contributes 1 score unit. Not calibrated on target photos; no weight search or alternate formulas after results.",
+    "tie_break": "closest to 33deg then smaller angle"
+  },
+  "evaluation": "Reuse final evaluator and same seven physical corner IDs [0,1,2,3,5,6,7]. Report front logo separately; fewer than 6 matches is unscored. Compare augmented winner vs old-score winner and fixed 27deg; no target alignment. Structural annotation uncertainty approx 2-5px.",
+  "gate": "Keep existing gate: clear important-error improvement without worse core feature or violated composition; no use-blocking defect for advertising. Same choice means no selection improvement. Tiny differences within annotation uncertainty are inconclusive.",
+  "stop_rule": "One modification only. If not improved, stop tuning this selector and move to a different experiment; no further weights tried on these targets.",
+  "data_separation": "No target RGB or target annotations before freeze. Prior Run19/20 results motivated the change and are development evidence, not unseen validation. New views same product are not cross-product validation.",
+  "resources": "CPU, existing dependencies, cached official archive; no GPU or paid API."
+}

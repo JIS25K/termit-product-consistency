@@ -1,0 +1,14 @@
+{
+  "version": "post-run24-provisional",
+  "reason": "4x area supersampling softened broken strokes but did not establish a clear native-size readability improvement on the small actual failure. Close this tuning branch.",
+  "adopt_area4x": false,
+  "minimum_native_ink_support_bbox_height_px": 15,
+  "size_estimator": "Height of the nonzero ink-support bounding box at final output resolution using the unchanged Run 23 renderer. Not the full label height or padded source ROI height.",
+  "below_minimum": "abstain_small_text; return unchanged input and report missing text unresolved",
+  "at_or_above_minimum": "eligible_for_visual_review_only; size alone does not approve restoration",
+  "existing_ink": "keep unchanged; no wording-correctness claim",
+  "unverified_cases": "abstain when existing Run 23 alignment or ink checks abstain",
+  "calibration_note": "15px is a conservative operational guard, not a validated human-readability threshold. The observed small case is excluded; intermediate sizes are untested. A larger controlled example is only a candidate, not evidence of generalization.",
+  "user_constraints": "Do not enlarge the product or change a required viewpoint without permission in the brief. If readable label size cannot be achieved within allowed composition, abstain.",
+  "next": "One larger-label ad workflow to measure actual usefulness, setup time and manual intervention; no additional small-label filter tuning. Gate 2 structural requirements still apply."
+}

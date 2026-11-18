@@ -1,0 +1,39 @@
+{
+  "experiment": "Run 23 — automatic local surface restoration",
+  "date": "2026-11-18",
+  "question": "With one source label and product-name ROI, can a fixed method locate missing-name repairs in full target ads while preserving an already-printed control?",
+  "reference": "../../edit_agent/run14/source/almond/2ec507662821f9ad.webp",
+  "source_label_quad": [[176,348],[843,345],[843,835],[177,835]],
+  "source_text_roi": [398,518,600,558],
+  "presence_guard_roi": [385,510,615,573],
+  "cases": [
+    {"id":"actual_missing", "input":"../../edit_agent/run14/source/almond/2ea38e327005205c.png", "role":"known actual missing-name failure from Run 22"},
+    {"id":"controlled_missing", "input":"inputs/controlled_missing.png", "role":"different-view existing ad with a controlled name deletion; not a new real failure"},
+    {"id":"normal_control", "input":"../../edit_agent/run14/source/almond/2c9f6f47bb93baf0.png", "role":"existing ad with visible name; expected unchanged"}
+  ],
+  "fixed": "Source image and once-only source regions; full target ads; SIFT/homography method and common thresholds; existing geometry and scene.",
+  "changed": "Replace per-target manual quadrilaterals with automatic feature alignment and conservative blank-region detection.",
+  "alignment": {
+    "method":"SIFT from source label excluding padded name ROI; mutual ratio matches; RANSAC homography",
+    "features":5000, "contrast_threshold":0.02, "ratio":0.78,
+    "ransac_px":3.0, "ransac_iterations":5000, "seed":0,
+    "min_inliers":8, "min_inlier_ratio":0.35, "max_median_reprojection_px":2.5,
+    "min_source_hull_fraction":0.08, "min_source_x_span":0.35, "min_source_y_span":0.30,
+    "min_inliers_above_and_below_name":2,
+    "min_projected_label_area":2500, "max_projected_label_area_fraction":0.8,
+    "min_projected_name_height_px":6, "min_label_visible_fraction":0.75
+  },
+  "presence": {
+    "method":"Rectify target to source frame; dark-ink occupancy in padded expected-name region; no OCR or semantic correctness claim.",
+    "dark_threshold_cap":100, "dark_contrast_from_p85":60,
+    "blank_max_ink_fraction":0.015, "present_min_ink_fraction":0.035
+  },
+  "gate": {
+    "proceed":"Both omission cases visibly restored in a reasonable location without new surrounding defects, zero changes outside ink support, and normal control pixel-identical. Small feasibility signal only.",
+    "conditional":"Only one view/scale works: restrict scope to demonstrated cases; do not claim general automatic restoration.",
+    "stop":"No repair succeeds, unsafe placement, normal-control damage, or repeated per-target manual alignment: stop this automatic method and retain manual surface assistance.",
+    "next":"Gate 2 only if a structurally acceptable novel-view product cut is independently available. Surface results do not clear Run 19–21 structural failures."
+  },
+  "limits":["One product, three selected/development cases", "Second omission is synthetic and easier than arbitrary real generation errors", "No target-view real-photo ground truth", "Curved label approximated by local homography", "No OCR; an ink-preserving decision does not verify wording", "Preparation-only deletion rectangle is isolated from the automatic pipeline", "No per-target target-position parameters or threshold tuning after outputs"],
+  "reporting":"Always include result, gate verdict, and next step."
+}

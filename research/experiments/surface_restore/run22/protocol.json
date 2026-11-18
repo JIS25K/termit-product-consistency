@@ -1,0 +1,70 @@
+{
+  "experiment": "run22-local-surface-restoration",
+  "date": "2026-11-18",
+  "trigger": "Run21 did not change the selected view; user authorized moving to another experiment if no improvement. Use previously agreed surface-restoration direction.",
+  "question": "Can missing product-name ink be transferred from a real reference into an existing generated advertisement while preserving every pixel outside the small edit support?",
+  "input_case": "Historical Run14 case_04, almond spread; known missing product name. This is a selected failure case, not an unseen test set.",
+  "required_text": "아몬드 스프레드",
+  "reference": "LOCAL_INPUT_REQUIRED",
+  "candidate": "LOCAL_INPUT_REQUIRED",
+  "input_sha256": {
+    "reference": "162f722553806d72269a5cf725eed29d938b9fd9eb6fada0e9f40636ecc35866",
+    "candidate": "b996da99f59c349f929182d59f68a96de40582bfff250503e6e58c11d9d4ef4e"
+  },
+  "fixed": "Existing advertisement, product view, geometry, logo, person, background, all pixels outside transferred ink mask.",
+  "change": "Only missing product-name ink. No image generation, font retyping, added invented label text, or 3D reconstruction.",
+  "manual_parameters": {
+    "source_label_quad": [
+      [
+        176,
+        348
+      ],
+      [
+        843,
+        345
+      ],
+      [
+        843,
+        835
+      ],
+      [
+        177,
+        835
+      ]
+    ],
+    "target_label_quad": [
+      [
+        615,
+        661
+      ],
+      [
+        833,
+        660
+      ],
+      [
+        832,
+        817
+      ],
+      [
+        616,
+        816
+      ]
+    ],
+    "source_text_roi": [
+      398,
+      518,
+      600,
+      558
+    ]
+  },
+  "method": "Local planar homography between manually selected label quads. Extract dark ink opacity within original product-name ROI and bilinearly reproject original color plus opacity; composite onto existing label.",
+  "gate": "Original product name visually present and recognizable in enlarged crop, no obvious pasted rectangle, unchanged pixels outside support. Native-resolution readability assessed separately. Surface-only feasibility, not exact novel-view accuracy or geometry repair.",
+  "limits": [
+    "One selected failure case",
+    "manual quadrilaterals and ROI",
+    "nearly frontal small region on curved label approximated as planar",
+    "no independent target-view real photo",
+    "no overall regeneration comparator; cannot claim superiority",
+    "no customer acceptance verdict"
+  ]
+}

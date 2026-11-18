@@ -1,0 +1,45 @@
+{
+  "run": 30,
+  "hypothesis": "A real scanned product mesh rendered with its support plane and contact shadows can preserve structure across two viewpoints more convincingly than an ordinary image edit, without output-dependent fixes.",
+  "asset": "YCB 035_power_drill Berkeley Poisson; original positions, faces and UVs, derived normals, explicitly assigned provided sole texture",
+  "viewpoints": {
+    "A": {
+      "azimuth": -60,
+      "elevation": 21.80140948635181
+    },
+    "B": {
+      "azimuth": -120,
+      "elevation": 21.80140948635181
+    }
+  },
+  "fixed": [
+    "1024x768 comparison canvas",
+    "same exact two target-view neutral renders supplied to ordinary calls",
+    "same official real-photo references",
+    "one matte oak workbench workshop brief",
+    "same source mesh, material parameters and lights across views"
+  ],
+  "changed": "Geometry-driven rendering of product+desk+shadow with product-free distant background versus one generative ad edit per view",
+  "budget": {
+    "empty_background_calls": 1,
+    "ordinary_calls_per_view": 1,
+    "quality_rerolls": 0,
+    "post_output_manual_fitting": 0
+  },
+  "asset_gate": "FAIL: two matched-source views show neck holes and scan/texture artifacts; stop before comparative image generation",
+  "final_gate": [
+    "Both views preserve major component silhouette, joints and proportions",
+    "No pasted edge, floating contact or obviously unacceptable scan/CG surface",
+    "No post-output position, mask, mesh, material or lighting repair",
+    "Clear useful original-product-fidelity advantage over ordinary calls; comparable quality is not a success"
+  ],
+  "stop": "If repairs are necessary or no convincing joint fidelity-and-ad-quality advantage, stop this asset/setup route without another parameter or seed trial.",
+  "limits": [
+    "Source scan is available in advance; acquisition cost for arbitrary customer products not established",
+    "Reference photos are not independent of dataset asset construction",
+    "Neutral target-view renders given to baseline make this a strong pipeline comparison, not an image-to-3D accuracy test",
+    "No blind human panel or operational cost claim",
+    "Initial setup/coordinate normalization is manual engineering; zero correction means only after final outputs"
+  ],
+  "compatibility_note": "Default OBJ import dropped 23826/28592 faces due invalid normal indices. Deterministic loader kept all source faces and UVs; no geometry/UV painting or manual repositioning."
+}

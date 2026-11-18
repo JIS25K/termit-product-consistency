@@ -1,0 +1,54 @@
+{
+  "run": 31,
+  "stage": "local feasibility first",
+  "objective": "Measure real SDXL LoRA forward/backward/optimizer steps on Apple M5 24GB; only continue product-quality trial if local runtime is practical.",
+  "model": "stabilityai/stable-diffusion-xl-base-1.0",
+  "training_framework": "Diffusers 0.37.0 official SDXL DreamBooth LoRA script",
+  "device": "mps",
+  "pilot": {
+    "steps": 10,
+    "resolution": 768,
+    "batch_size": 1,
+    "rank": 4,
+    "gradient_checkpointing": true,
+    "mixed_precision": "fp16",
+    "seed": 31,
+    "image": "Run30 real N1_177; no mesh/render input; pilot weights discarded"
+  },
+  "local_gate": {
+    "finite_loss": true,
+    "nonzero_adapter_update": true,
+    "median_seconds_per_step_after_warmup_max": 12,
+    "max_actual_mps_driver_memory_gb": 18,
+    "failure_action": "stop local quality run; preserve feasibility evidence; do not switch to paid cloud"
+  },
+  "conditional_quality_trial": {
+    "training_steps": 200,
+    "training_runs": 1,
+    "train_images": 12,
+    "heldout_views": [
+      "N1_60",
+      "N1_240"
+    ],
+    "train_heldout_min_angle_degrees": 30,
+    "view_count": 2,
+    "samples_per_view": 2,
+    "post_output_manual_repair": 0,
+    "quality_rerolls": 0,
+    "note": "A bounded low-rank local feasibility trial, not maximum achievable SDXL or LoRA quality. Base-model before/after isolates adaptation; ordinary image tool is a separate practical comparator."
+  },
+  "not_claimed": [
+    "GPU-free training (MPS uses Apple GPU)",
+    "3D reconstruction",
+    "exact heldout-camera control from text",
+    "success solely from decreasing training loss"
+  ],
+  "preflight_addition": {
+    "reason": "Model transfer slow; measure computational feasibility without waiting for full weights",
+    "method": "random-initialized same SDXL UNet; synthetic latent/context; rank4 real gradient updates at768",
+    "max_steps": 4,
+    "stop_after_two_if_seconds_per_step_exceeds": 12,
+    "interpretation": "runtime screening only; not pretrained stability or product-quality evidence",
+    "added_utc": "2026-11-18T00:26:28.585953+00:00"
+  }
+}

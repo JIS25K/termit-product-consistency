@@ -1,0 +1,224 @@
+{
+  "lora": {
+    "repo": "fal/Qwen-Image-Edit-2511-Multiple-Angles-LoRA",
+    "revision": "e3066224ab74263f4a5b6179cd1a3b0a15577e44",
+    "files": [
+      {
+        "name": ".gitattributes",
+        "size": 1710,
+        "sha256": null
+      },
+      {
+        "name": "README.md",
+        "size": 11343,
+        "sha256": null
+      },
+      {
+        "name": "all_animations_combined.gif",
+        "size": 35748830,
+        "sha256": "3095edc10ca85e58f4629d24a6a2c527c80e219b17af754d710b0f2d4723f88b"
+      },
+      {
+        "name": "comfyui-workflow-multiple-angles.json",
+        "size": 28086,
+        "sha256": null
+      },
+      {
+        "name": "poses_96_animated.gif",
+        "size": 2912944,
+        "sha256": "4ed0ede4d652b1b00e395fab404e5e6ef014191a53c09f139843a17442352a94"
+      },
+      {
+        "name": "poses_96_distance_comparison.png",
+        "size": 618628,
+        "sha256": "813d04acfa2057e00858e7d63c7776a024742221f2606b0577e722b86e563631"
+      },
+      {
+        "name": "qwen-image-edit-2511-multiple-angles-lora.safetensors",
+        "size": 295140688,
+        "sha256": "42426ded4e25fd22879d9e198b857556445ef4ca56e8da3246d0345155bb6765"
+      }
+    ]
+  },
+  "base": {
+    "repo": "Qwen/Qwen-Image-Edit-2511",
+    "revision": "6f3ccc0b56e431dc6a0c2b2039706d7d26f22cb9",
+    "files": [
+      {
+        "name": ".gitattributes",
+        "size": 1580,
+        "sha256": null
+      },
+      {
+        "name": "README.md",
+        "size": 7179,
+        "sha256": null
+      },
+      {
+        "name": "model_index.json",
+        "size": 516,
+        "sha256": null
+      },
+      {
+        "name": "processor/added_tokens.json",
+        "size": 605,
+        "sha256": null
+      },
+      {
+        "name": "processor/chat_template.jinja",
+        "size": 1017,
+        "sha256": null
+      },
+      {
+        "name": "processor/merges.txt",
+        "size": 1671853,
+        "sha256": null
+      },
+      {
+        "name": "processor/preprocessor_config.json",
+        "size": 826,
+        "sha256": null
+      },
+      {
+        "name": "processor/special_tokens_map.json",
+        "size": 613,
+        "sha256": null
+      },
+      {
+        "name": "processor/tokenizer.json",
+        "size": 11421896,
+        "sha256": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa"
+      },
+      {
+        "name": "processor/tokenizer_config.json",
+        "size": 4727,
+        "sha256": null
+      },
+      {
+        "name": "processor/video_preprocessor_config.json",
+        "size": 910,
+        "sha256": null
+      },
+      {
+        "name": "processor/vocab.json",
+        "size": 2776833,
+        "sha256": null
+      },
+      {
+        "name": "scheduler/scheduler_config.json",
+        "size": 485,
+        "sha256": null
+      },
+      {
+        "name": "text_encoder/config.json",
+        "size": 3146,
+        "sha256": null
+      },
+      {
+        "name": "text_encoder/generation_config.json",
+        "size": 244,
+        "sha256": null
+      },
+      {
+        "name": "text_encoder/model-00001-of-00004.safetensors",
+        "size": 4968243304,
+        "sha256": "d725335e4ea2399be706469e4b8807716a8fa64bd03468252e9f7acf2415fee4"
+      },
+      {
+        "name": "text_encoder/model-00002-of-00004.safetensors",
+        "size": 4991495816,
+        "sha256": "b1830db6908dcc76df3a71492acbcf2b8cac130114cf1f3c2d9edae8de8c6de3"
+      },
+      {
+        "name": "text_encoder/model-00003-of-00004.safetensors",
+        "size": 4932751040,
+        "sha256": "09c1807c6d00d7cab94f7db39d4c02ebb8537225ccde383861ac48db97945aa6"
+      },
+      {
+        "name": "text_encoder/model-00004-of-00004.safetensors",
+        "size": 1691924384,
+        "sha256": "5dd068336d14d45ffb43cef374d286cc6ba9d8741b028f90a7d040d847961f4a"
+      },
+      {
+        "name": "text_encoder/model.safetensors.index.json",
+        "size": 57655,
+        "sha256": null
+      },
+      {
+        "name": "tokenizer/added_tokens.json",
+        "size": 605,
+        "sha256": null
+      },
+      {
+        "name": "tokenizer/chat_template.jinja",
+        "size": 2427,
+        "sha256": null
+      },
+      {
+        "name": "tokenizer/merges.txt",
+        "size": 1671853,
+        "sha256": null
+      },
+      {
+        "name": "tokenizer/special_tokens_map.json",
+        "size": 613,
+        "sha256": null
+      },
+      {
+        "name": "tokenizer/tokenizer_config.json",
+        "size": 4686,
+        "sha256": null
+      },
+      {
+        "name": "tokenizer/vocab.json",
+        "size": 3383407,
+        "sha256": null
+      },
+      {
+        "name": "transformer/config.json",
+        "size": 362,
+        "sha256": null
+      },
+      {
+        "name": "transformer/diffusion_pytorch_model-00001-of-00005.safetensors",
+        "size": 9973578592,
+        "sha256": "2a0c30c9ba44a5f11c21ca139e37951430bbde814ff4e0b5b1a68b80530e7a1a"
+      },
+      {
+        "name": "transformer/diffusion_pytorch_model-00002-of-00005.safetensors",
+        "size": 9987326072,
+        "sha256": "54ec249b07b4376e19cf16b764054f03ca03ae2cfbd9939453e2085f4e9bd259"
+      },
+      {
+        "name": "transformer/diffusion_pytorch_model-00003-of-00005.safetensors",
+        "size": 9987307440,
+        "sha256": "c55157843525653161e8f6af5acc670ba3aceff04284f7cf657199d24d065e16"
+      },
+      {
+        "name": "transformer/diffusion_pytorch_model-00004-of-00005.safetensors",
+        "size": 9930685712,
+        "sha256": "ffcfb5a4895702635890a67bad183591e0ae515d794bdcb26e217b27a7f6d12d"
+      },
+      {
+        "name": "transformer/diffusion_pytorch_model-00005-of-00005.safetensors",
+        "size": 982130472,
+        "sha256": "2b2556b736629e10a5a0dfa14606f2057f4f81c2ba53f94103682c7ac42d4940"
+      },
+      {
+        "name": "transformer/diffusion_pytorch_model.safetensors.index.json",
+        "size": 198887,
+        "sha256": null
+      },
+      {
+        "name": "vae/config.json",
+        "size": 730,
+        "sha256": null
+      },
+      {
+        "name": "vae/diffusion_pytorch_model.safetensors",
+        "size": 253806966,
+        "sha256": "0c8bc8b758c649abef9ea407b95408389a3b2f610d0d10fcb054fe171d0a8344"
+      }
+    ]
+  }
+}

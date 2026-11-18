@@ -1,0 +1,34 @@
+{
+  "run": 29,
+  "objective": "Source product first, generate surroundings; stop if compositing remains visible or manual relocation needed",
+  "fixed": [
+    "Run28 source photo and exact source tee mask",
+    "Run28 scale and location",
+    "golf scene style and framing",
+    "final normalised 1024x768 canvas",
+    "one generation per path",
+    "same explicit source proportions in both prompts"
+  ],
+  "changed": "Direct full model edit vs fixed product guide + surrounding-scene generation + immutable product layer restoration",
+  "manual": "Reuse previous tee registration; one pre-generation ball matte setup; no output-guided masks or position edits",
+  "gates": [
+    "Source tee geometry unchanged",
+    "No visible double edge, halo, pasted lighting, ball join or floating ground contact",
+    "No manual reposition or additional output tuning",
+    "Improvement versus equally explicit ordinary call"
+  ],
+  "budget": {
+    "baseline_calls": 1,
+    "scene_calls": 1,
+    "retries": 0,
+    "position_adjustments": 0
+  },
+  "stop": "Any visible compositing or need for manual reposition -> stop this 2D fixed-layer route, not another scene/seed/parameter retry",
+  "limits": [
+    "Near-same front view only",
+    "Candidate receives an extra deterministic layout guide; comparison is pipelines, not equal prompt input ablation",
+    "Inherited manual registration cost remains",
+    "Single case; no independent 3D or generalisation proof",
+    "Final fixed layer deliberately disallows foreground grass occlusion"
+  ]
+}

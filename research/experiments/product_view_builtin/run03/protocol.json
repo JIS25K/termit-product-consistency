@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-17",
+  "tool": "image_gen built-in",
+  "input": "../run02/S1.png",
+  "prompt": "첨부한 광고 이미지 한 장을 편집하세요. 배경의 따뜻한 베이지색만 연한 하늘색으로 바꾸세요. 피규어 제품과 받침대는 수정 대상이 아닙니다. 피규어의 위치, 크기, 시점, 자세, 실루엣, 귀와 눈과 코, 팔다리와 발톱, 노란 짐과 손 및 매듭, 조립 이음선, 표면 질감, 색과 광택을 그대로 유지하세요. 받침대의 모양, 크기, 위치, 베이지색을 그대로 유지하세요. 카메라 구도, 조명 방향과 강도, 그림자의 위치와 형태도 그대로 유지하세요. 제품을 다시 디자인하거나 회전하지 말고, 물체를 추가하거나 제거하지 마세요. 원본과 같은 정사각형 이미지로 출력하세요. 변경 범위는 받침대를 제외한 배경색뿐입니다.",
+  "changes": "background beige to light sky blue only",
+  "fixed": [
+    "product",
+    "pedestal",
+    "composition",
+    "lighting",
+    "shadow geometry"
+  ],
+  "source_photos_reattached": false,
+  "selection": "first output, no quality reroll"
+}

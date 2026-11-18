@@ -1,0 +1,13 @@
+torch
+torchvision
+transformers>=4.45
+opencv-python-headless
+pillow
+numpy
+anthropic>=2.8
+pydantic>=2
+fastapi
+uvicorn
+python-multipart
+pytest
+easyocr

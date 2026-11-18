@@ -1,0 +1,17 @@
+{
+  "experiment": "run19-real-box-heldout",
+  "date": "2026-11-18",
+  "product": "YCB 003_cracker_box / Cheez-It cardboard package",
+  "primary_question": "실사 평면 재투영이 제작에 쓰지 않은 실제 시점에서 로고 위치, 외곽 모서리, 면 접합 위치를 보존하는가",
+  "source_images": ["N2_0.jpg", "N2_60.jpg", "N2_120.jpg", "N2_180.jpg", "N2_240.jpg", "N2_300.jpg"],
+  "target_images": ["N2_30.jpg", "N2_90.jpg", "N2_150.jpg", "N2_210.jpg", "N2_270.jpg", "N2_330.jpg"],
+  "permitted_metadata": "공식 카메라 내부 보정과 촬영 리그·회전대의 포즈. 목표 카메라 메타데이터는 요청 시점 지정에 사용 가능",
+  "forbidden_production_inputs": ["목표 사진 RGB", "목표 사진의 모서리·로고 주석", "목표 사진으로 추정한 정렬 변환", "공식 전체시점 3D 메시·텍스처", "공식 모델로 생성된 segmentation masks"],
+  "source_pool_exclusions": "다운로드한 N1/N3 사진은 탐색 자료이며 주 실험의 제작·형상 추정에는 사용하지 않음",
+  "design": "직육면체 표면은 6개 입력 사진과 카메라 기하로만 추정. 원본 텍스처를 면 단위 호모그래피로 목표 카메라에 재투영. 6개 출력을 먼저 고정한 뒤 목표 사진을 읽어 평가",
+  "image_processing": "가로 1600px의 동일 작업 해상도, 공식 렌즈 보정값으로 입력과 평가 사진 모두 동일하게 왜곡 보정. 평가 사진에 맞춘 재정렬·색상 보정 없음",
+  "measurements": ["실사 목표와 생성 결과의 로고/인쇄 특징 대응점 위치 오차", "독립 실사 외곽선과 재투영 외곽선의 대칭 거리", "실사에서 보이는 면 접합선의 위치 오차", "제품 영역 RGB 오차는 조명 차이가 섞이므로 보조 측정"],
+  "provisional_tolerances": {"coordinate_unit": "작업 이미지 픽셀, 실사 제품 bbox 대각선으로 정규화", "logo_median_max_diag_fraction": 0.005, "logo_p95_max_diag_fraction": 0.01, "silhouette_p95_max_diag_fraction": 0.01, "seam_p95_max_diag_fraction": 0.01, "status": "이 예비 실험의 허용 기준이며 상업 납품 기준으로 합의된 값이 아님"},
+  "evidence": ["원본 및 결과 해시", "제작 종료 시점의 코드·모형·출력 고정본", "목표 사진 최초 평가 접근 기록", "전 6시점 결과·실사 비교 및 오차표", "로고와 모서리·접합부 확대 확인"],
+  "limitations": ["상품 1종", "보정된 촬영 리그", "조명·반사 변화", "종이 상자의 팽창·접힘은 이상적 직육면체와 다를 수 있음", "생성형 AI와의 성능 비교는 이번 범위 밖"]
+}

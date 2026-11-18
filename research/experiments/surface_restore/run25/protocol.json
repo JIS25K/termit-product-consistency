@@ -1,0 +1,92 @@
+{
+  "experiment": "Run 25: one new large-label advertising workflow with source-print postproduction",
+  "task_started_utc": "2026-11-17T17:53:40+00:00",
+  "created_utc": "2026-11-17T17:54:58.278334+00:00",
+  "reference": "LOCAL_INPUT_REQUIRED",
+  "generation_prompt": "generation_prompt.txt",
+  "generation_prompt_sha256": "1411dbcc8ea4cdc67ab4e3a856069b50a84f98858d462553e66f2c57cf032a0a",
+  "generation_mode": "built-in image_gen; one reference-guided new ad; one planned blank product-name line",
+  "data_role": "New generated ad, intentionally reserved text line; not an observed accidental omission and not a held-out target-view real photograph",
+  "delivery": "1024 px longest side, aspect preserved; request square; no upscaling. Normalize before automatic alignment.",
+  "fixed": [
+    "Run 23 automatic registration and native-resolution ink-transfer code and thresholds",
+    "Run 24 small-text guard",
+    "source ink, source registration regions, product identity"
+  ],
+  "changed": [
+    "New advertising scene and product scale within brief",
+    "Register source product once for this run, then automatically find target coordinates"
+  ],
+  "minimum_ink_height_px": 15,
+  "limits": {
+    "image_generation_calls": 1,
+    "target_manual_alignment_edits": 0,
+    "manual_pixel_retouches": 0,
+    "renderer_tuning": 0
+  },
+  "gate": {
+    "proceed": "Automatic placement with source product name readable at final size, outside-support changes zero, no target manual edits, ad composition meets brief; narrow workflow feasibility only",
+    "stop": "Alignment/size/blankness failure, unreadable product name, obvious patch, or target manual corrections needed: report failed/limited and stop this one-shot workflow"
+  },
+  "timing": "Wall clock from first tool timestamp through final artifact verification includes preparation, coding, generation wait, transfer, repair, QA and report; stage durations separately recorded. Not a human operator benchmark.",
+  "manual_accounting": "Count source registration separately from target coordinate/pixel edits, prompt revisions, generation retries, and code preparation. Existing source regions are reused, so fresh annotation labor is not measured.",
+  "source_registration": {
+    "product_id": "JamMate-almond-run25",
+    "reference": "LOCAL_INPUT_REQUIRED",
+    "reference_sha256": "162f722553806d72269a5cf725eed29d938b9fd9eb6fada0e9f40636ecc35866",
+    "source_label_quad": [
+      [
+        176,
+        348
+      ],
+      [
+        843,
+        345
+      ],
+      [
+        843,
+        835
+      ],
+      [
+        177,
+        835
+      ]
+    ],
+    "source_text_roi": [
+      398,
+      518,
+      600,
+      558
+    ],
+    "presence_guard_roi": [
+      385,
+      510,
+      615,
+      573
+    ],
+    "created_utc": "2026-11-17T17:54:58.278067+00:00",
+    "method": "register reference and import two previously specified source regions; not a newly timed manual annotation",
+    "registration_count": 1,
+    "new_manual_source_coordinate_edits": 0,
+    "reused_from": "Run 22/23 source registration"
+  },
+  "frozen_files": [
+    {
+      "path": "LOCAL_INPUT_REQUIRED",
+      "sha256": "905d7acba9e3a65c17e09e10128a3ea76f86694aa058fe77ff52cf2b91d86d2e"
+    },
+    {
+      "path": "LOCAL_INPUT_REQUIRED",
+      "sha256": "2c5ac51dba24fd94c5d4633e9e1f8903a03eac75075776e5a58e9b58ead222d9"
+    },
+    {
+      "path": "LOCAL_INPUT_REQUIRED",
+      "sha256": "7048e4e98f79a7a5f3d7f6ff1015e7b95d313ed9bce2dc3853a76f540ef0bbde"
+    },
+    {
+      "path": "LOCAL_INPUT_REQUIRED",
+      "sha256": "162f722553806d72269a5cf725eed29d938b9fd9eb6fada0e9f40636ecc35866"
+    }
+  ],
+  "next_rule": "Report result, gate and next step. No claim that label restoration validates new-view 3D structure or improves production speed versus a baseline."
+}

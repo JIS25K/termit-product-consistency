@@ -1,0 +1,21 @@
+{
+  "id": "run18-cpu-evidence-renderer",
+  "date": "2026-11-18",
+  "goal": "실사 라벨 재투영, 픽셀 출처 기록, 미관측 영역 보류가 하나의 작은 제작 단위로 작동하는지 확인",
+  "scope": "식혜병 라벨 표면만. 전체 병 형상, 재조명, 광고 완성도, 실측 회전각 검증은 제외",
+  "geometry_status": "수작업 윤곽과 원통 단면을 사용한 근사. 복원된 실제 3D가 아님",
+  "source_pose_status": "정면 0도 기준, 측면 65도는 가정. 실제 촬영각을 측정하지 않음",
+  "sources": [
+    {"id": "front", "path": "output/product_candidate_0700_0703/IMG_0700.jpg", "pose_deg": 0, "type": "observed_photo", "cx": [242, 240, 237, 236], "r": [109, 100, 89, 78], "top_base": 187, "top_curve": 31, "bottom_base": 559, "bottom_curve": 36},
+    {"id": "side", "path": "output/product_candidate_0700_0703/IMG_0701.jpg", "pose_deg": 65, "type": "observed_photo", "cx": [246, 247, 246, 244], "r": [110, 102, 91, 82], "top_base": 195, "top_curve": 34, "bottom_base": 557, "bottom_curve": 39}
+  ],
+  "held_out": "중간 목표 시점 실사 없음. IMG_0702/0703은 제작·수치평가에 사용하지 않음",
+  "source_support_half_angle_deg": 70,
+  "manual_pose_sensitivity_deg": [-10, 0, 10],
+  "acceptance_rule": {"max_unknown_fraction": 0.01, "meaning": "근사 라벨 미리보기의 임시 조건. 제품 정확도/광고 납품 승인 아님", "pose_sensitivity_all_must_pass": true},
+  "experiment_angles_deg": [-30, 0, 30, 60, 90, 120],
+  "comparison": "같은 형상·출력 시점·보간에서 입력을 정면 한 장 또는 정면+측면 두 장으로 변경",
+  "invariants": ["관측 사진만 텍스처 근거로 사용", "소스 없는 표면을 생성하거나 최근접 색으로 메우지 않음", "사용 픽셀마다 소스 ID와 실사 좌표 기록", "요청 허용 범위 밖으로 자동 이동하지 않음"],
+  "validation": ["소스 좌표와 bilinear 보간으로 출력 RGB를 독립 재계산", "한 장 정면 시점의 미관측률을 원통 투영 해석식과 대조", "한 장/두 장 및 각도 변화에 따른 미관측 면적 비교", "각도 허용 범위와 보류 분기 확인", "원본 해시 변경 없음 확인", "브라우저에서 실제 입력 변경과 결과 갱신 확인"],
+  "not_tested": ["실제 중간 시점 정답 대비 정확도", "전체 제품 부품 및 구조 보존", "범용 생성 모델 대비 우월성", "다른 상품 일반화", "관측 출처가 정확한 위치를 보장하는지"]
+}

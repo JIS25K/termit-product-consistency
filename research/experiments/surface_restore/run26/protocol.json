@@ -1,0 +1,106 @@
+{
+  "experiment": "Run26: transfer fixed large-label workflow to a second real product",
+  "task_started_utc": "2026-11-17T18:00:00+00:00",
+  "created_utc": "2026-11-17T18:02:42.240956+00:00",
+  "source_registration": {
+    "product_id": "paldo-birak-sikhye-run26",
+    "reference": "LOCAL_INPUT_REQUIRED",
+    "reference_sha256": "9f68de8cfe1168f2ef06f1e65d220d53a619aed9da2031daed7c9474e157b72f",
+    "original_photo": "LOCAL_INPUT_REQUIRED",
+    "original_sha256": "d03231f1b4f008ed272d0918900b7ac001561752ff18a81dfd5d45fad4dd92f2",
+    "source_preparation": "original 3024x4032 photo reduced proportionally to 768x1024, no retouch or contrast adjustment",
+    "source_label_quad": [
+      [
+        207,
+        337
+      ],
+      [
+        550,
+        345
+      ],
+      [
+        482,
+        945
+      ],
+      [
+        244,
+        931
+      ]
+    ],
+    "source_text_roi": [
+      264,
+      732,
+      427,
+      818
+    ],
+    "presence_guard_roi": [
+      257,
+      725,
+      434,
+      825
+    ],
+    "required_text": "일상 속 달콤한 시간",
+    "scope": "black handwritten tagline below main product name, not white-filled 비락식혜 wordmark",
+    "annotation_method": "new source-only coordinates chosen from source grid and print crop, no target image existed",
+    "registration_count": 1,
+    "source_annotation_passes": 1,
+    "new_manual_source_regions": 2,
+    "derived_presence_guard": 1,
+    "source_coordinate_revisions": 0,
+    "completed_utc": "2026-11-17T18:02:41.973349+00:00"
+  },
+  "reference": "LOCAL_INPUT_REQUIRED",
+  "generation_prompt": "generation_prompt.txt",
+  "generation_prompt_sha256": "5deda65a0885ca237705c001c486799869fecc31717b37f37e05d22ec66457b9",
+  "generation_mode": "built-in image_gen, one new ad with preplanned blank black handwritten tagline",
+  "data_role": "second product; new generated scene; planned omission; not an accidental error or independent target-view real photo",
+  "delivery": "normalize longest side to 1024 px, preserve aspect, no upscaling",
+  "fixed": [
+    "Run23 SIFT, homography, confidence, blankness, ink extraction and native warp settings",
+    "Run24 min 15px ink support guard",
+    "source regions frozen before target generation"
+  ],
+  "changed": [
+    "new product, new source registration, new advertising scene",
+    "black handwritten tagline instead of black JamMate product-name line"
+  ],
+  "minimum_ink_height_px": 15,
+  "limits": {
+    "generation_calls": 1,
+    "target_manual_alignment_edits": 0,
+    "manual_retouches": 0,
+    "renderer_tuning": 0
+  },
+  "gate": {
+    "proceed": "Automatically place the original black tagline, readable at final size, outside-support changes zero and no target manual correction; narrow second-product feasibility",
+    "stop": "If automatic alignment, blankness, placement or readability fails, stop without target-coordinate fixing or threshold tuning; define a narrower scope"
+  },
+  "frozen_files": [
+    {
+      "path": "LOCAL_INPUT_REQUIRED",
+      "sha256": "905d7acba9e3a65c17e09e10128a3ea76f86694aa058fe77ff52cf2b91d86d2e"
+    },
+    {
+      "path": "LOCAL_INPUT_REQUIRED",
+      "sha256": "2c5ac51dba24fd94c5d4633e9e1f8903a03eac75075776e5a58e9b58ead222d9"
+    },
+    {
+      "path": "LOCAL_INPUT_REQUIRED",
+      "sha256": "7048e4e98f79a7a5f3d7f6ff1015e7b95d313ed9bce2dc3853a76f540ef0bbde"
+    },
+    {
+      "path": "LOCAL_INPUT_REQUIRED",
+      "sha256": "24057832d5f611477a1ef4b28d8010e2a250c07e0eb0bcf2bbca94673424bf5e"
+    },
+    {
+      "path": "LOCAL_INPUT_REQUIRED",
+      "sha256": "9f68de8cfe1168f2ef06f1e65d220d53a619aed9da2031daed7c9474e157b72f"
+    },
+    {
+      "path": "LOCAL_INPUT_REQUIRED",
+      "sha256": "d03231f1b4f008ed272d0918900b7ac001561752ff18a81dfd5d45fad4dd92f2"
+    }
+  ],
+  "timing": "Measure source inspection/annotation/registration separately from product search, generation, code preparation and whole task. Agent annotation, not a human-user benchmark.",
+  "run_policy": "Close this exploratory branch at Run26. Do not automatically schedule Run27. Success -> package a bounded prototype next; failure -> preserve JamMate/similar-label scope and close generalization claim."
+}

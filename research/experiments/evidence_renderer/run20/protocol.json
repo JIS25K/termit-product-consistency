@@ -1,0 +1,42 @@
+{
+  "experiment": "run20-blind-view-selection",
+  "date": "2026-11-18",
+  "product": "YCB 003_cracker_box",
+  "source_images": [
+    "N2_0.jpg",
+    "N2_60.jpg",
+    "N2_120.jpg",
+    "N2_180.jpg",
+    "N2_240.jpg",
+    "N2_300.jpg"
+  ],
+  "target_images": [
+    "N2_18.jpg",
+    "N2_24.jpg",
+    "N2_33.jpg",
+    "N2_36.jpg",
+    "N2_42.jpg",
+    "N2_48.jpg"
+  ],
+  "baseline": "N2_33.jpg",
+  "allowed_table_rotation_degrees": [
+    18,
+    48
+  ],
+  "minimum_distance_from_any_source_degrees": 12,
+  "required_composition": "정면 로고와 오른쪽 면이 함께 보이는 새 시점; projected front area >=40%, right area >=5% of visible product surface",
+  "fixed": "Run19 source photos, frozen cuboid vertices, identical render_target/common code, lens correction, 1600x1067 resolution; no geometry refit",
+  "permitted_inputs": "6 source RGB, source annotations, frozen cuboid, official source/target camera metadata. No target RGB or target annotations before ranking freeze.",
+  "selection_rule": {
+    "eligibility": "front >=40%, right >=5%, >=12deg from any source",
+    "risk_score": "10*(uncovered_fraction + out_of_bounds_fraction) + area_weighted_mean(abs(log2(sigma1))+abs(log2(sigma2)))/2",
+    "jacobian_sampling": "homography source-to-target local Jacobian at 5x5 bilinear interior points per face; singular values; face weights from projected target area",
+    "meaning": "uncalibrated geometric sampling-risk proxy; lower is preferred, not a probability or verified accuracy",
+    "tie_break": "closest to baseline then smaller angle",
+    "chosen_count": 1
+  },
+  "evaluation": "After ranking freeze, open all six fresh real views. Reuse Run19 corner/seam and logo correspondence evaluator; same seven visible corner IDs per view. Compare structural and surface errors separately with side-by-side images. Approximate 2-5px manual annotation uncertainty. Do not judge a slight metric difference as decisive.",
+  "gate": "Proceed only for clear important-error improvement over baseline without worse core feature or violated composition, and no use-blocking defect. Ambiguous improvement=conditional/inconclusive. If best view still has use-blocking geometry, pivot renderer scope rather than tune selector.",
+  "known_data_exclusion": "Run19 target views [30,90,150,210,270,330] were already inspected and are not new test evidence; existing observations informed this pilot, so this is not product-level generalization.",
+  "cost_scope": "CPU and existing dependencies, no generative model or paid API. Quick pilot."
+}

@@ -1,0 +1,98 @@
+{
+  "experiment": "Run 24: one supersampling comparison for the actual small missing name",
+  "created_utc": "2026-11-17T17:50:10.330027+00:00",
+  "reference": "../../edit_agent/run14/source/almond/2ec507662821f9ad.webp",
+  "candidate": "../../edit_agent/run14/source/almond/2ea38e327005205c.png",
+  "baseline": "../run23/outputs/actual_missing.png",
+  "H_source_to_target": [
+    [
+      0.27163088056743356,
+      -0.06351984715037738,
+      571.889297753937
+    ],
+    [
+      -0.017150131627652946,
+      0.2266467716595684,
+      562.181668802824
+    ],
+    [
+      -2.7612537633881417e-05,
+      -9.03537050307052e-05,
+      1.0
+    ]
+  ],
+  "source_text_roi": [
+    398,
+    518,
+    600,
+    558
+  ],
+  "projected_label_quad": [
+    [
+      620.1029663085938,
+      662.0714111328125
+    ],
+    [
+      823.8161010742188,
+      661.9605712890625
+    ],
+    [
+      829.750244140625,
+      817.69970703125
+    ],
+    [
+      616.4500122070312,
+      813.7684326171875
+    ]
+  ],
+  "frozen_files": [
+    {
+      "path": "../run23/protocol.json",
+      "sha256": "905d7acba9e3a65c17e09e10128a3ea76f86694aa058fe77ff52cf2b91d86d2e"
+    },
+    {
+      "path": "../run23/restore.py",
+      "sha256": "2c5ac51dba24fd94c5d4633e9e1f8903a03eac75075776e5a58e9b58ead222d9"
+    },
+    {
+      "path": "../run23/outputs/results.json",
+      "sha256": "503228c72ef054bba3422eee826078bb7335e7b362f1fdd39c9f866c8f501ebb"
+    },
+    {
+      "path": "../run23/outputs/actual_missing.png",
+      "sha256": "e1ddcbef10845f782fcd8f0b1eb7e669e7f526a8b8e21560b0abb7403a7c774e"
+    },
+    {
+      "path": "../../edit_agent/run14/source/almond/2ec507662821f9ad.webp",
+      "sha256": "162f722553806d72269a5cf725eed29d938b9fd9eb6fada0e9f40636ecc35866"
+    },
+    {
+      "path": "../../edit_agent/run14/source/almond/2ea38e327005205c.png",
+      "sha256": "b996da99f59c349f929182d59f68a96de40582bfff250503e6e58c11d9d4ef4e"
+    }
+  ],
+  "fixed": [
+    "Run 23 exact saved transform; no re-estimation",
+    "source ROI and ink alpha/color extraction",
+    "target scene and output size 1024x1024",
+    "geometry, font/ink design, text location and size"
+  ],
+  "baseline_method": "Run 23 native-resolution INTER_LINEAR warp and composite, reproduced pixel-exactly",
+  "alternative": {
+    "scale_factor": 4,
+    "method": "INTER_LINEAR warp at 4x target density, INTER_AREA downsample of alpha and color-times-alpha, composite into unchanged native target",
+    "pixel_center_mapping": "S=[4,0,1.5;0,4,1.5;0,0,1] so each group of samples is centered on the original target pixel; no physical translation"
+  },
+  "scope": "One known actual failure; one alternative, no factor sweep, no sharpening/dilation or retyped text",
+  "gate": {
+    "adopt": "Visible readability improvement at original output size, without new smear/position errors and with zero outside-support changes; enlarged crops are diagnostic only",
+    "stop": "If improvement is absent, insufficient or ambiguous, close this small-label tuning branch and exclude the observed small-text case from automatic restoration"
+  },
+  "next": "Record result, gate, and next experiment; Gate 2 remains dependent on a separately acceptable novel-view product structure",
+  "limitations": [
+    "Not blind; same development case",
+    "Single product and size; no universal minimum pixel height proven",
+    "No target-view real-photo ground truth",
+    "Worker visual judgment, no customer acceptance test"
+  ]
+}

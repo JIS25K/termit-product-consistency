@@ -1,0 +1,41 @@
+{
+  "product_id": "figurine01",
+  "product_description": "The exact blue round creature figurine in the photograph, with two tall pointed ears, white eyes with black pupils, a tiny black nose, a cream belly with three blue marks, a mustard-yellow tied sack carried on one side, blue arms and small dark claws.",
+  "must_preserve": [
+    "two tall pointed ears and the original rounded body proportions",
+    "cream belly with three blue marks and the original eyes and nose",
+    "one mustard-yellow sack on the same side as in the reference, with its tied neck held by the same hand",
+    "the original arm poses, feet and small dark claws; do not mirror the figurine"
+  ],
+  "inputs": [
+    "../../output/product_candidate_0695_0698/IMG_0695.jpg"
+  ],
+  "input_descriptions": [
+    "front view photographed from above; the yellow sack is on the left side of the input image"
+  ],
+  "targets": [
+    {
+      "id": "bag_side",
+      "camera": "left side view elevated shot medium shot. View the sack-carrying side: the yellow sack is nearest the camera, and the figurine nose points toward the right side of the output image. Keep the whole figurine visible.",
+      "holdout": "../../output/product_candidate_0695_0698/IMG_0698.jpg"
+    }
+  ],
+  "scene": "A clean commercial product photograph on a matte beige pedestal, warm pale background, soft studio light and a natural contact shadow. One product, fully visible, centered. No props, people or additional advertising text.",
+  "seeds": [
+    101
+  ],
+  "width": 1024,
+  "height": 1024,
+  "steps": 40,
+  "true_cfg_scale": 4.0,
+  "lora_scale": 0.9,
+  "include_lora_off_control": true,
+  "api": {
+    "endpoint": "fal-ai/qwen-image-edit-2511/lora",
+    "acceleration": "none",
+    "price_usd_per_megapixel": 0.035,
+    "price_checked": "2026-11-17",
+    "estimate_only": true,
+    "lora_url": "https://huggingface.co/fal/Qwen-Image-Edit-2511-Multiple-Angles-LoRA/resolve/e3066224ab74263f4a5b6179cd1a3b0a15577e44/qwen-image-edit-2511-multiple-angles-lora.safetensors"
+  }
+}
